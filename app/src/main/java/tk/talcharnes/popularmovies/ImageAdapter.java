@@ -4,8 +4,12 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 
+/**
+ * Created by Tal on 2/24/2016.
+ */
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
     private Integer[] asc = {
@@ -43,9 +47,9 @@ public class ImageAdapter extends BaseAdapter {
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
-          //  imageView.setLayoutParams(new GridView.LayoutParams(185, 277));
+            imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-          //  imageView.setPadding(8, 8, 8, 8);
+            imageView.setPadding(8, 8, 8, 8);
         } else {
             imageView = (ImageView) convertView;
         }
