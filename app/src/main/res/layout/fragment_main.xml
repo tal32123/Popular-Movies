@@ -15,6 +15,7 @@
         android:horizontalSpacing="0dp"
         android:verticalSpacing="0dp"
         android:layout_margin="0dp"
+        android:columnWidth="185dp"
         />
 
 </FrameLayout>
