@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Toast.makeText(getApplicationContext(), "testing the app",
+                Toast.makeText(getApplicationContext(), "You clicked image "+position,
                         Toast.LENGTH_SHORT).show();
             }
         });
