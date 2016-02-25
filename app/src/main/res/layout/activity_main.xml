@@ -7,9 +7,11 @@
     android:fitsSystemWindows="true"
     tools:context="tk.talcharnes.popularmovies.MainActivity">
 
-
-    <include layout="@layout/content_main" />
-
+    <!-- Placeholder where you inject your fragment. Additional layer of complexity isn't needed. -->
+    <FrameLayout
+        android:id="@+id/fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 
 </android.support.design.widget.CoordinatorLayout>
