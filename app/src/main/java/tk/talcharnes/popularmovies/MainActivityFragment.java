@@ -22,7 +22,8 @@ public class MainActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        GridView gridView = (GridView) container.findViewById(R.id.gridview);
+        // should find gridview on the view which you are creating
+        GridView gridView = (GridView) view.findViewById(R.id.gridview);
         gridView.setAdapter(new ImageAdapter(getContext()));
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
