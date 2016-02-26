@@ -12,16 +12,11 @@ import android.widget.ImageView;
  */
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
-    private Integer[] asc = {
-            R.drawable.sample_0, R.drawable.sample_1,
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7,
-            R.drawable.sample_0, R.drawable.sample_1,
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7
-    };
+    private Integer[] asc = new Integer[PostersFragment.getMovieModelList().size()];
+            for(int i = 0; i < asc.length; i++){
+            asc[i]=(getMovieModelList.get(i).getPoster_path);
+    }
+
     private Integer[] desc = {
             R.drawable.sample_7, R.drawable.sample_6,
             R.drawable.sample_5, R.drawable.sample_4,
