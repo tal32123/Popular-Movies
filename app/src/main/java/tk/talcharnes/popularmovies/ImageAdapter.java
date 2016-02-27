@@ -35,10 +35,12 @@ public class ImageAdapter extends BaseAdapter {
 
 
     public int getCount() {
-        if (asc == null){
+        try{
+        return imageArray.length;}
+        catch(NullPointerException e){
+            e.printStackTrace();
             return 0;
         }
-        return imageArray.length;
     }
 
     public ImageAdapter(Context c) {
