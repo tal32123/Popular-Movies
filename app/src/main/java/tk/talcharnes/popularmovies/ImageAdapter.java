@@ -35,6 +35,9 @@ public class ImageAdapter extends BaseAdapter {
 
 
     public int getCount() {
+        if (asc == null){
+            return 0;
+        }
         return imageArray.length;
     }
 
