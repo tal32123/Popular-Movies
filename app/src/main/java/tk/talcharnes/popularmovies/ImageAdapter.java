@@ -12,30 +12,26 @@ import com.squareup.picasso.Picasso;
  * Created by Tal on 2/24/2016.
  */
 public class ImageAdapter extends BaseAdapter {
-    private String[] imageArray = getAsc();
-
+    private static String[] desc = {
+            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
+            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
+            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
+            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
+            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
+            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
+            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
+            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
+            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
+            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg"
+    };
+    private static String[] imageArray = getAsc();
     private Context mContext;
-    private String[] asc = new String[(PostersFragment.getMovieModelList().size())];
+    //private String[] asc = new String[PostersFragment.getMovieModelListLength()];
+    private static String[] asc;
 
     public ImageAdapter(){
-        //loads the asc array with movie url's
 
-
-        for(int i = 0; i < asc.length; i++){
-            asc[i]=(PostersFragment.getMovieModelList().get(i).getPoster_path());
-        }
     }
-    private Integer[] desc = {
-            R.drawable.sample_7, R.drawable.sample_6,
-            R.drawable.sample_5, R.drawable.sample_4,
-            R.drawable.sample_3, R.drawable.sample_2,
-            R.drawable.sample_1, R.drawable.sample_0,
-            R.drawable.sample_0, R.drawable.sample_1,
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7
-
-    };
 
 
     public int getCount() {
@@ -75,11 +71,19 @@ public class ImageAdapter extends BaseAdapter {
 
 
 
-    public String[] getAsc() {
+    public static String[] getAsc() {
         return asc;
     }
 
-    public Integer[] getDesc() {
+    public static void setAsc(String[] asc) {
+        ImageAdapter.asc = asc;
+    }
+
+    public static String[] getDesc() {
         return desc;
     }
+    public static void setImageArray(String[] arrayName){
+        imageArray = arrayName;
+    }
+
 }

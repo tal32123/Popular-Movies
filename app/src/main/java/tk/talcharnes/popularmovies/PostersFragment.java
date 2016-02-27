@@ -30,6 +30,10 @@ import java.util.List;
  */
 public class PostersFragment extends Fragment {
     private static List<MovieModel> movieModelList;
+    private static int movieModelListLength;
+    GridView gridView;
+    private String done = null;
+    ImageAdapter adapter;
     public PostersFragment() {
     }
 
@@ -39,7 +43,7 @@ public class PostersFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         FetchPostersTask fetchPostersTask = (FetchPostersTask) new FetchPostersTask().execute();
         // should find gridview on the view which you are creating
-        GridView gridView = (GridView) view.findViewById(R.id.gridview);
+        gridView = (GridView) view.findViewById(R.id.gridview);
         gridView.setAdapter(new ImageAdapter(getContext()));
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -81,7 +85,7 @@ public class FetchPostersTask extends AsyncTask<Void,Void,Void> {
                 movieModel.setPoster_path(movieJsonObject.getString("poster_path"));
                 movieModel.setRelease_date(movieJsonObject.getString("release_date"));
                 movieModel.setVote_average(movieJsonObject.getString("vote_average"));
-
+                movieModelListLength++;
 
                 movieModelList.add(movieModel);
             }
@@ -152,8 +156,24 @@ public class FetchPostersTask extends AsyncTask<Void,Void,Void> {
                         }
             return null;
         }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            //ImageAdapter.setAsc(movieModelList.);
+            String[] asc = new String[movieModelList.size()];
+            for(int i = 0; i < asc.length; i++){
+                asc[i]=(getMovieModelList().get(i).getPoster_path());
+                ImageAdapter.setAsc(asc);
+            }
+
+        }
     }
     public static List<MovieModel> getMovieModelList(){
         return movieModelList;
     }
+    public static int getMovieModelListLength(){
+        return movieModelListLength;
+    }
+
 }
