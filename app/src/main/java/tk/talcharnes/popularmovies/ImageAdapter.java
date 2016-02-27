@@ -27,7 +27,7 @@ public class ImageAdapter extends BaseAdapter {
     private static String[] imageArray = getAsc();
     private Context mContext;
     //private String[] asc = new String[PostersFragment.getMovieModelListLength()];
-    private static String[] asc;
+    private static String[] asc = {};
 
     public ImageAdapter(){
 
