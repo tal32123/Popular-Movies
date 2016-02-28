@@ -66,13 +66,13 @@ public class PostersFragment extends Fragment {
     private String middle_section = "discover/movie?sort_by=popularity.desc&api_key=";
     private String jSonUrl = BASE_URL + middle_section + BuildConfig.MOVIE_DB_API_KEY;
     //Get movie posters and data
-public class FetchPostersTask extends AsyncTask<Void,Void,Void> {
-    private final String LOG_TAG = FetchPostersTask.class.getSimpleName();
+    public class FetchPostersTask extends AsyncTask<Void,Void,Void> {
+        private final String LOG_TAG = FetchPostersTask.class.getSimpleName();
         //will contain raw Json data
         String posterJsonString = null;
 
         public Void parseMovieJson()
-        throws JSONException{
+                throws JSONException{
             JSONObject jsonParentObject = new JSONObject(posterJsonString);
             JSONArray movieJSonArray = jsonParentObject.getJSONArray("results");
 
@@ -98,62 +98,62 @@ public class FetchPostersTask extends AsyncTask<Void,Void,Void> {
             BufferedReader reader = null;
 //
             //will contain raw Json data
-           // String posterJsonString = null;
-              try{
+            // String posterJsonString = null;
+            try{
 
-                  //open connection to api
+                //open connection to api
 
-                    URL url = new URL(jSonUrl);
-                    urlConnection = (HttpURLConnection) url.openConnection();
-                  urlConnection.setRequestMethod("GET");
-                  urlConnection.connect();
+                URL url = new URL(jSonUrl);
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
 
-                  //read input into string
-                  InputStream inputStream = urlConnection.getInputStream();
-                  StringBuffer buffer = new StringBuffer();
-                  if(inputStream == null){
-                      //nothing else to do in this case
-                      return null;
-                  }
-                  reader = new BufferedReader(new InputStreamReader(inputStream));
-                    String line;
-                  while((line = reader.readLine())!= null){
-                        buffer.append(line + "\n");
-                  }
-
-                  if(buffer.length()==0){
-                      //nothing here, don't parse
-                      return null;
-                  }
-
-                  posterJsonString = buffer.toString();
-            }
-                catch(MalformedURLException e){
-             e.printStackTrace();
-            }
-                catch(IOException e){
-                    Log.e(LOG_TAG, "Error", e);
+                //read input into string
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if(inputStream == null){
+                    //nothing else to do in this case
                     return null;
                 }
-            finally {
-                  if(urlConnection != null){
-                      urlConnection.disconnect();
-                  }
-                  if(reader != null){
-                      try{
-                          reader.close();
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+                String line;
+                while((line = reader.readLine())!= null){
+                    buffer.append(line + "\n");
+                }
 
-                      }
-                      catch (final IOException e){
-                            Log.e(LOG_TAG,"Error closing stream", e);
-                      }
-                  }
-              }
-                        try{
-                            parseMovieJson();;
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                if(buffer.length()==0){
+                    //nothing here, don't parse
+                    return null;
+                }
+
+                posterJsonString = buffer.toString();
+            }
+            catch(MalformedURLException e){
+                e.printStackTrace();
+            }
+            catch(IOException e){
+                Log.e(LOG_TAG, "Error", e);
+                return null;
+            }
+            finally {
+                if(urlConnection != null){
+                    urlConnection.disconnect();
+                }
+                if(reader != null){
+                    try{
+                        reader.close();
+
+                    }
+                    catch (final IOException e){
+                        Log.e(LOG_TAG,"Error closing stream", e);
+                    }
+                }
+            }
+            try{
+                parseMovieJson();;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             return null;
         }
 
@@ -166,7 +166,7 @@ public class FetchPostersTask extends AsyncTask<Void,Void,Void> {
                 asc[i]=(getMovieModelList().get(i).getPoster_path());
                 //ImageAdapter.setAsc(asc);
             }
-                adapter.setImageArray(asc);
+            adapter.setImageArray(asc);
         }
     }
     public static List<MovieModel> getMovieModelList(){

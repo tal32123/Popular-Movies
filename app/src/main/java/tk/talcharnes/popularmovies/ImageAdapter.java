@@ -36,7 +36,7 @@ public class ImageAdapter extends BaseAdapter {
 
     public int getCount() {
         try{
-        return imageArray.length;}
+            return imageArray.length;}
         catch(NullPointerException e){
             e.printStackTrace();
             return 0;
@@ -65,7 +65,7 @@ public class ImageAdapter extends BaseAdapter {
             //imageView.setLayoutParams(new GridView.LayoutParams(385, 385));
             convertView = imageView;
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-          //  imageView.setPadding(8, 8, 8, 8);
+            //  imageView.setPadding(8, 8, 8, 8);
         } else {
             imageView = (ImageView) convertView;
         }
