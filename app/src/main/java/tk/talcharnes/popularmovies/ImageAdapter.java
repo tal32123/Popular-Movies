@@ -24,7 +24,7 @@ public class ImageAdapter extends BaseAdapter {
             "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
             "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg"
     };
-    private static String[] imageArray = getAsc();
+    private static String[] imageArray = getDesc();
     private Context mContext;
     //private String[] asc = new String[PostersFragment.getMovieModelListLength()];
     private static String[] asc = {};
@@ -56,12 +56,14 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     // create a new ImageView for each item referenced by the Adapter
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
             //imageView.setLayoutParams(new GridView.LayoutParams(385, 385));
+            convertView = imageView;
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
           //  imageView.setPadding(8, 8, 8, 8);
         } else {
