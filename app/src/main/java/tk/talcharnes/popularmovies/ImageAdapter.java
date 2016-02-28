@@ -12,6 +12,7 @@ import com.squareup.picasso.Picasso;
  * Created by Tal on 2/24/2016.
  */
 public class ImageAdapter extends BaseAdapter {
+  //  private static String[] desc = new String[9];
     private static String[] desc = {
             "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
             "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
@@ -92,5 +93,4 @@ public class ImageAdapter extends BaseAdapter {
     public static void setImageArray(String[] arrayName){
         imageArray = arrayName;
     }
-
 }
