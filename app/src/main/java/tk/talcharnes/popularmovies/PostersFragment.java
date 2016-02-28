@@ -49,7 +49,7 @@ public class PostersFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Toast.makeText(getContext(), "You clicked image " + position + movieModelList.get(0).getTitle() ,
+                Toast.makeText(getContext(), "You clicked image " + position + movieModelList.get(position).getTitle() ,
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -164,9 +164,9 @@ public class FetchPostersTask extends AsyncTask<Void,Void,Void> {
             String[] asc = new String[movieModelList.size()];
             for(int i = 0; i < asc.length; i++){
                 asc[i]=(getMovieModelList().get(i).getPoster_path());
-                ImageAdapter.setAsc(asc);
+                //ImageAdapter.setAsc(asc);
             }
-
+                adapter.setImageArray(asc);
         }
     }
     public static List<MovieModel> getMovieModelList(){
