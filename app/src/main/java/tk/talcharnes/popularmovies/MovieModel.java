@@ -43,7 +43,7 @@ public class MovieModel {
     }
 
     public String getPoster_path() {
-        return ((String)("http://image.tmdb.org/t/p/w185/" + poster_path));
+        return "http://image.tmdb.org/t/p/w185/" + poster_path;
     }
 
     public void setPoster_path(String poster_path) {

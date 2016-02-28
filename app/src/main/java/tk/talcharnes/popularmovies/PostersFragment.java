@@ -34,29 +34,22 @@ public class PostersFragment extends Fragment {
     GridView gridView;
     private String done = null;
     ImageAdapter adapter;
-    String[]asc;
     public PostersFragment() {
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        FetchPostersTask fetchPostersTask = (FetchPostersTask) new FetchPostersTask();
-        fetchPostersTask.execute();
-        adapter = new ImageAdapter(getContext());
-        adapter.setAsc(asc);
-        adapter.setImageArray(asc);
-
+        FetchPostersTask fetchPostersTask = (FetchPostersTask) new FetchPostersTask().execute();
         // should find gridview on the view which you are creating
         gridView = (GridView) view.findViewById(R.id.gridview);
-        gridView.setAdapter(adapter);
+        gridView.setAdapter(new ImageAdapter(getContext()));
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Toast.makeText(getContext(), "You clicked image " + movieModelList.get(position).getTitle() ,
+                Toast.makeText(getContext(), "You clicked image " + position + movieModelList.get(0).getTitle() ,
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -167,19 +160,18 @@ public class FetchPostersTask extends AsyncTask<Void,Void,Void> {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            //ImageAdapter.setAsc(movieModelList.);
             String[] asc = new String[movieModelList.size()];
-            for(int i = 0; i < movieModelListLength; i++){
-                asc[i]=(movieModelList.get(i).getPoster_path());
-
+            for(int i = 0; i < asc.length; i++){
+                asc[i]=(getMovieModelList().get(i).getPoster_path());
+                ImageAdapter.setAsc(asc);
             }
 
-            ImageAdapter.setImageArray(asc);
         }
     }
     public static List<MovieModel> getMovieModelList(){
         return movieModelList;
     }
-
     public static int getMovieModelListLength(){
         return movieModelListLength;
     }
