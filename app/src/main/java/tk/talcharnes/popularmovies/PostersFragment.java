@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -34,6 +37,7 @@ public class PostersFragment extends Fragment {
     GridView gridView;
     private String done = null;
     ImageAdapter adapter;
+    private FetchPostersTask fetchPostersTask;
     public PostersFragment() {
     }
 
@@ -41,8 +45,9 @@ public class PostersFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        FetchPostersTask fetchPostersTask = (FetchPostersTask) new FetchPostersTask().execute();
-
+//         fetchPostersTask = (FetchPostersTask) new FetchPostersTask();
+//        fetchPostersTask.execute();
+            updatePosters();
         // should find gridview on the view which you are creating
         gridView = (GridView) view.findViewById(R.id.gridview);
         gridView.setAdapter(new ImageAdapter(getContext()));
@@ -50,8 +55,10 @@ public class PostersFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Toast.makeText(getContext(), "You clicked " + movieModelList.get(position).getTitle() ,
+                Toast.makeText(getContext(), "You clicked " + movieModelList.get(position).getTitle(),
                         Toast.LENGTH_SHORT).show();
+                MovieModel movieModel = movieModelList.get(position);
+
             }
         });
         return view;
@@ -60,9 +67,38 @@ public class PostersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_refresh) {
+            Toast.makeText(getActivity(), "Refreshing",
+                    Toast.LENGTH_SHORT).show();
+
+           updatePosters();
+            gridView.setAdapter(new ImageAdapter(getContext()));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    public void updatePosters(){
+        FetchPostersTask updatePosters = new FetchPostersTask();
+        updatePosters.execute();
+    }
     private final String BASE_URL = "https://api.themoviedb.org/3/";
     private String middle_section = "discover/movie?sort_by=popularity.desc&api_key=";
     private String jSonUrl = BASE_URL + middle_section + BuildConfig.MOVIE_DB_API_KEY;
@@ -92,6 +128,7 @@ public class PostersFragment extends Fragment {
             }
             return null;
         }
+
         @Override
         protected Void doInBackground(Void ...params) {
 
