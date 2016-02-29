@@ -9,12 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:numColumns="auto_fit"
-        android:stretchMode="columnWidth"
+        android:stretchMode="none"
         android:gravity="center"
-        android:columnWidth="100dp"
-        android:horizontalSpacing="0dp"
-        android:verticalSpacing="0dp"
-        android:layout_margin="0dp"
+        android:columnWidth="185dp"
         />
 
 </FrameLayout>
+    <!--android:columnWidth="150dp" -->

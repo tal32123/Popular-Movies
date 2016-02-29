@@ -42,6 +42,7 @@ public class PostersFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         FetchPostersTask fetchPostersTask = (FetchPostersTask) new FetchPostersTask().execute();
+
         // should find gridview on the view which you are creating
         gridView = (GridView) view.findViewById(R.id.gridview);
         gridView.setAdapter(new ImageAdapter(getContext()));
@@ -49,7 +50,7 @@ public class PostersFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Toast.makeText(getContext(), "You clicked image " + movieModelList.get(position).getTitle() ,
+                Toast.makeText(getContext(), "You clicked " + movieModelList.get(position).getTitle() ,
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -167,6 +168,7 @@ public class PostersFragment extends Fragment {
                 //ImageAdapter.setAsc(asc);
             }
             adapter.setImageArray(asc);
+           // adapter.notifyDataSetChanged();
         }
     }
     public static List<MovieModel> getMovieModelList(){

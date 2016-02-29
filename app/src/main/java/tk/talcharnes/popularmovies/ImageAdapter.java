@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -63,15 +64,17 @@ public class ImageAdapter extends BaseAdapter {
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
-            //imageView.setLayoutParams(new GridView.LayoutParams(385, 385));
+            int pixels = (int) (mContext.getResources().getDisplayMetrics().density + 0.5f);
+            imageView.setLayoutParams(new GridView.LayoutParams(185*pixels, 277*pixels));
+
             convertView = imageView;
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            //  imageView.setPadding(8, 8, 8, 8);
         } else {
             imageView = (ImageView) convertView;
         }
         Picasso.with(mContext).load(imageArray[position])
-                .placeholder(R.drawable.sample_0)
+             //   .placeholder(R.drawable.sample_0)
+         //       .resize(185,277)
                 .into(imageView);
         //imageView.setImageResource(Integer.parseInt(imageArray[position]));
         return imageView;
