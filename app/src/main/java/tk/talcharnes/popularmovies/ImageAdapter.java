@@ -68,16 +68,13 @@ public class ImageAdapter extends BaseAdapter {
             imageView.setLayoutParams(new GridView.LayoutParams(185*pixels, 277*pixels));
 
             convertView = imageView;
-
+            imageView.setAdjustViewBounds(true);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         } else {
             imageView = (ImageView) convertView;
         }
         Picasso.with(mContext).load(imageArray[position])
-             //   .placeholder(R.drawable.sample_0)
-         //       .resize(185,277)
                 .into(imageView);
-        //imageView.setImageResource(Integer.parseInt(imageArray[position]));
         return imageView;
     }
 
