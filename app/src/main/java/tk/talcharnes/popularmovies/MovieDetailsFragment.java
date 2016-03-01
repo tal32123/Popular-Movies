@@ -6,7 +6,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -21,11 +24,30 @@ public class MovieDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
 
+        //get movie object in order to extract details
         Intent intent = getActivity().getIntent();
         int movie_number = intent.getIntExtra("Movie_number", 0);
+        MovieModel movie = PostersFragment.getMovieModelList().get(movie_number);
+
+        //set title in details view
         TextView titleView = (TextView) rootView.findViewById(R.id.movie_details_text);
-        String title = PostersFragment.getMovieModelList().get(movie_number).getTitle();
-        titleView.setText(title);
+        titleView.setText(movie.getTitle());
+
+        //set poster into details view
+        ImageView poster = (ImageView)rootView.findViewById(R.id.poster);
+        Picasso.with(getContext()).load(movie.getPoster_path()).into(poster);
+
+        // set movie year in details view
+        TextView release_date = (TextView)rootView.findViewById(R.id.release_date);
+        release_date.setText(movie.getRelease_date().substring(0,4));
+
+        //set vote average in details view
+        TextView vote_average = (TextView) rootView.findViewById(R.id.vote_average);
+        vote_average.setText(movie.getVote_average() + " /10");
+
+        //set overview in details view
+        TextView overview = (TextView) rootView.findViewById(R.id.overview);
+        overview.setText(movie.getOverview());
 
 
         return rootView;

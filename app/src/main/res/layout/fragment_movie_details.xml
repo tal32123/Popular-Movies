@@ -1,10 +1,57 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView android:text="Hello!" android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fillViewport="true">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView android:text="Title!"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:id="@+id/movie_details_text"
+        android:textColor="@android:color/white"
+        android:background="#90CAF9"
+        android:textSize="32sp"
+        android:padding="8dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/movie_details_text"/>
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="185dp"
+            android:layout_height="277dp"
+            android:text="Poster"
+            android:layout_margin="8dp"
+            android:src="@drawable/temp_poster"
+            android:id="@+id/poster"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:textSize="24sp"
+            android:text="Release Date"
+            android:id="@+id/release_date"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Vote Average"
+            android:id="@+id/vote_average"/>
+        </LinearLayout>
+    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Overview"
+        android:layout_margin="8dp"
+        android:id="@+id/overview"/>
+</LinearLayout>
 
-</RelativeLayout>
+</ScrollView>
