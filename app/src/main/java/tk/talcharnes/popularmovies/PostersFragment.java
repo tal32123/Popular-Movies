@@ -1,5 +1,7 @@
 package tk.talcharnes.popularmovies;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -50,7 +52,8 @@ public class PostersFragment extends Fragment {
             updatePosters();
         // should find gridview on the view which you are creating
         gridView = (GridView) view.findViewById(R.id.gridview);
-        gridView.setAdapter(new ImageAdapter(getContext()));
+        adapter = new ImageAdapter(getContext());
+        gridView.setAdapter(adapter);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -58,6 +61,9 @@ public class PostersFragment extends Fragment {
                 Toast.makeText(getContext(), "You clicked " + movieModelList.get(position).getTitle(),
                         Toast.LENGTH_SHORT).show();
                 MovieModel movieModel = movieModelList.get(position);
+                Intent intent = new Intent(getActivity(), MovieDetails.class);
+                intent.putExtra("Movie_number", position);
+                startActivity(intent);
 
             }
         });
@@ -72,7 +78,7 @@ public class PostersFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_main, menu);
+        inflater.inflate(R.menu.menu_refresh, menu);
 
     }
 
@@ -82,15 +88,13 @@ public class PostersFragment extends Fragment {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
         if (id == R.id.action_refresh) {
             Toast.makeText(getActivity(), "Refreshing",
                     Toast.LENGTH_SHORT).show();
 
            updatePosters();
-            gridView.setAdapter(new ImageAdapter(getContext()));
+            gridView.setAdapter(adapter);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -99,9 +103,15 @@ public class PostersFragment extends Fragment {
         FetchPostersTask updatePosters = new FetchPostersTask();
         updatePosters.execute();
     }
-    private final String BASE_URL = "https://api.themoviedb.org/3/";
-    private String middle_section = "discover/movie?sort_by=popularity.desc&api_key=";
-    private String jSonUrl = BASE_URL + middle_section + BuildConfig.MOVIE_DB_API_KEY;
+
+
+
+
+
+
+
+
+
     //Get movie posters and data
     public class FetchPostersTask extends AsyncTask<Void,Void,Void> {
         private final String LOG_TAG = FetchPostersTask.class.getSimpleName();
@@ -134,14 +144,24 @@ public class PostersFragment extends Fragment {
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
-//
+
             //will contain raw Json data
             // String posterJsonString = null;
             try{
 
                 //open connection to api
 
-                URL url = new URL(jSonUrl);
+                //URL url = new URL(jSonUrl);
+                final String BASE_URL = "https://api.themoviedb.org/3/discover/movie?";
+                final String SORT_PARAM ="sort_by";
+                String sort_by = "popularity.desc";
+
+
+                Uri builtUri = Uri.parse(BASE_URL).buildUpon()
+                        .appendQueryParameter(SORT_PARAM, sort_by)
+                        .appendQueryParameter("api_key", BuildConfig.MOVIE_DB_API_KEY).build();
+
+                URL url = new URL(builtUri.toString());
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
@@ -205,7 +225,7 @@ public class PostersFragment extends Fragment {
                 //ImageAdapter.setAsc(asc);
             }
             adapter.setImageArray(asc);
-           // adapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();
         }
     }
     public static List<MovieModel> getMovieModelList(){
