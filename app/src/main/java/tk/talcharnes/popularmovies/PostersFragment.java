@@ -58,22 +58,33 @@ public class PostersFragment extends Fragment {
 
 
 
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-       int width = (int) (displayMetrics.widthPixels / displayMetrics.density);
-
-        //For Tabs
-//        boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-//        width = isLandscape ? (width / 2) : width;
-        int numcolumns =(int) (width/(185));
+         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        int width = (int) (displayMetrics.widthPixels / displayMetrics.density);
 //
-//        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
-//        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-//        int numcolumns = (int)((185*dp)/dpWidth);
-        gridView.setNumColumns(numcolumns);
+//        //For Tabs
+////        boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+////        width = isLandscape ? (width / 2) : width;
+//        int numcolumns =(int) (width/(185));
+////
+////        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
+////        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+////        int numcolumns = (int)((185*dp)/dpWidth);
+//        gridView.setNumColumns(numcolumns);
+        if (getResources().getConfiguration().orientation
+                == 1) {
+            gridView.setNumColumns(2);
+            gridView.setColumnWidth(width/2);
+
+        } else if ( getResources().getConfiguration().orientation
+                == 2) {
+            gridView.setNumColumns(3);
+            gridView.setColumnWidth(width/3);
+
+        }
 
         adapter = new ImageAdapter(getContext());
         gridView.setAdapter(adapter);
-
+        updatePosters();
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
@@ -94,7 +105,7 @@ public class PostersFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        
+
     }
 
     @Override
