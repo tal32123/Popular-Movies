@@ -73,12 +73,10 @@ public class PostersFragment extends Fragment {
         if (getResources().getConfiguration().orientation
                 == 1) {
             gridView.setNumColumns(2);
-            gridView.setColumnWidth(width/2);
 
         } else if ( getResources().getConfiguration().orientation
                 == 2) {
             gridView.setNumColumns(3);
-            gridView.setColumnWidth(width/3);
 
         }
 
