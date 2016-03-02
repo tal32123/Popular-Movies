@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,7 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -78,8 +81,23 @@ public class PostersFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        getActivity().getMenuInflater().inflate(R.menu.menu_main, menu);
         inflater.inflate(R.menu.menu_refresh, menu);
 
+
+        MenuItem item = menu.findItem(R.id.spinner);
+        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
+//        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity().getActionBar().getThemedContext(),
+//                R.array.sort_by, android.R.layout.simple_spinner_item);
+//        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        String[] sortingCriteria = {"Popular", "Highest Rated"};
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, sortingCriteria);
+        spinner.setAdapter(spinnerAdapter);
+
+// Apply the adapter to the spinner
+        //spinner.setAdapter(spinnerAdapter); // set the adapter to provide layout of rows and content
     }
 
     @Override

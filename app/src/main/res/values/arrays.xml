@@ -8,5 +8,9 @@
         <item>asc</item>
         <item>desc</item>
     </string-array>
+    <string-array name="sort_by">
+        <item>Popularity</item>
+        <item>Rating</item>
+    </string-array>
     
 </resources>
