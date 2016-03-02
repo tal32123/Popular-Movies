@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,12 +41,10 @@ public class PostersFragment extends Fragment {
     private static List<MovieModel> movieModelList;
     private static int movieModelListLength;
     GridView gridView;
-    private String done = null;
     ImageAdapter adapter;
     private String sort_method;
-    private FetchPostersTask fetchPostersTask;
     public PostersFragment() {
-        sort_method = "popularity.desc";
+        //sort_method = "popularity.desc";
     }
 
     @Override
@@ -56,6 +55,22 @@ public class PostersFragment extends Fragment {
             updatePosters();
         // should find gridview on the view which you are creating
         gridView = (GridView) view.findViewById(R.id.gridview);
+
+
+
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+       int width = (int) (displayMetrics.widthPixels / displayMetrics.density);
+
+        //For Tabs
+//        boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+//        width = isLandscape ? (width / 2) : width;
+        int numcolumns =(int) (width/(185));
+//
+//        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
+//        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+//        int numcolumns = (int)((185*dp)/dpWidth);
+        gridView.setNumColumns(numcolumns);
+
         adapter = new ImageAdapter(getContext());
         gridView.setAdapter(adapter);
 
@@ -78,6 +93,8 @@ public class PostersFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        
     }
 
     @Override

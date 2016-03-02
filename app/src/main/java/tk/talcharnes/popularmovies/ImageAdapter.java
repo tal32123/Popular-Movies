@@ -67,9 +67,10 @@ public class ImageAdapter extends BaseAdapter {
             int pixels = (int) (mContext.getResources().getDisplayMetrics().density + 0.5f);
             imageView.setLayoutParams(new GridView.LayoutParams(185*pixels, 277*pixels));
 
+            imageView.setAdjustViewBounds(true);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             convertView = imageView;
 
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         } else {
             imageView = (ImageView) convertView;
         }
