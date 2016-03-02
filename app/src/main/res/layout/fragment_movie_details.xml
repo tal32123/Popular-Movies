@@ -10,12 +10,14 @@
     android:orientation="vertical">
     <TextView android:text="Title!"
         android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_height="wrap_content"
         android:id="@+id/movie_details_text"
         android:textColor="@android:color/white"
         android:background="#90CAF9"
         android:textSize="32sp"
-        android:padding="8dp"/>
+        android:paddingLeft="8dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

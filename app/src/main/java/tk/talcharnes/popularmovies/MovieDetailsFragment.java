@@ -39,7 +39,14 @@ public class MovieDetailsFragment extends Fragment {
 
         // set movie year in details view
         TextView release_date = (TextView)rootView.findViewById(R.id.release_date);
-        release_date.setText(movie.getRelease_date().substring(0,4));
+        if(movie.getRelease_date().length() > 3){
+        release_date.setText(movie.getRelease_date().substring(0,4));}
+        else if (movie.getRelease_date() == null){
+            release_date.setText("Release date not available");
+        }
+        else{
+            release_date.setText((movie.getRelease_date()));
+        };
 
         //set vote average in details view
         TextView vote_average = (TextView) rootView.findViewById(R.id.vote_average);

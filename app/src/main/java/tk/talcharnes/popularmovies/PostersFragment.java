@@ -42,16 +42,17 @@ public class PostersFragment extends Fragment {
     GridView gridView;
     private String done = null;
     ImageAdapter adapter;
+    private String sort_method;
     private FetchPostersTask fetchPostersTask;
     public PostersFragment() {
+        sort_method = "popularity.desc";
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-//         fetchPostersTask = (FetchPostersTask) new FetchPostersTask();
-//        fetchPostersTask.execute();
+
             updatePosters();
         // should find gridview on the view which you are creating
         gridView = (GridView) view.findViewById(R.id.gridview);
@@ -81,23 +82,39 @@ public class PostersFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        getActivity().getMenuInflater().inflate(R.menu.menu_main, menu);
+        //commented out until a settings menu is implemented
+      //  super.onCreateOptionsMenu(menu, inflater);
+      //  getActivity().getMenuInflater().inflate(R.menu.menu_main, menu);
         inflater.inflate(R.menu.menu_refresh, menu);
 
 
-        MenuItem item = menu.findItem(R.id.spinner);
+        MenuItem item = menu.findItem(R.id.spinnerr);
         Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
-//        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity().getActionBar().getThemedContext(),
-//                R.array.sort_by, android.R.layout.simple_spinner_item);
-//        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
 
         String[] sortingCriteria = {"Popular", "Highest Rated"};
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, sortingCriteria);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinner, sortingCriteria);
         spinner.setAdapter(spinnerAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if(position == 0){
+                    sort_method = "popularity.desc";
+                    updatePosters();
+                }
+                else if (position == 1){
+                    sort_method = "vote_average.desc";
+                    updatePosters();
+                }
+            }
 
-// Apply the adapter to the spinner
-        //spinner.setAdapter(spinnerAdapter); // set the adapter to provide layout of rows and content
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // does nothing
+            }
+
+        });
+
     }
 
     @Override
@@ -164,19 +181,17 @@ public class PostersFragment extends Fragment {
             BufferedReader reader = null;
 
             //will contain raw Json data
-            // String posterJsonString = null;
             try{
 
                 //open connection to api
 
-                //URL url = new URL(jSonUrl);
                 final String BASE_URL = "https://api.themoviedb.org/3/discover/movie?";
                 final String SORT_PARAM ="sort_by";
-                String sort_by = "popularity.desc";
+
 
 
                 Uri builtUri = Uri.parse(BASE_URL).buildUpon()
-                        .appendQueryParameter(SORT_PARAM, sort_by)
+                        .appendQueryParameter(SORT_PARAM, sort_method)
                         .appendQueryParameter("api_key", BuildConfig.MOVIE_DB_API_KEY).build();
 
                 URL url = new URL(builtUri.toString());
@@ -236,11 +251,11 @@ public class PostersFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            //ImageAdapter.setAsc(movieModelList.);
+
             String[] asc = new String[movieModelList.size()];
             for(int i = 0; i < asc.length; i++){
                 asc[i]=(getMovieModelList().get(i).getPoster_path());
-                //ImageAdapter.setAsc(asc);
+
             }
             adapter.setImageArray(asc);
             adapter.notifyDataSetChanged();

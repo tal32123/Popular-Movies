@@ -8,4 +8,10 @@
         android:orderInCategory="1"
         app:showAsAction="never"
         />
+    <item android:id="@+id/spinnerr"
+        android:title="sort"
+
+        app:showAsAction="ifRoom"
+        app:actionViewClass="android.widget.Spinner"
+        />
 </menu>

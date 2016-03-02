@@ -17,7 +17,7 @@ public class MovieDetails extends ActionBarActivity {
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        getSupportActionBar().setTitle("Movie Details");
 
     }
 
