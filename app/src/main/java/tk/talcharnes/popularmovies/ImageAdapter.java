@@ -3,8 +3,8 @@ package tk.talcharnes.popularmovies;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -68,9 +68,9 @@ public class ImageAdapter extends BaseAdapter {
 
 
 
-            imageView.setLayoutParams(new GridView.LayoutParams(185 * pixels, 277 * pixels));
+          //  imageView.setLayoutParams(new GridView.LayoutParams(185 * pixels, 277 * pixels));
 
-            // imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+           imageView.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.MATCH_PARENT));
 
             imageView.setAdjustViewBounds(true);
             imageView.setPadding(0, 0, 0, 0);

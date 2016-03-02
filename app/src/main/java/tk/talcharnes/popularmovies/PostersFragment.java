@@ -73,6 +73,7 @@ public class PostersFragment extends Fragment {
         if (getResources().getConfiguration().orientation
                 == 1) {
             gridView.setNumColumns(2);
+            
 
         } else if ( getResources().getConfiguration().orientation
                 == 2) {
