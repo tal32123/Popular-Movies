@@ -95,7 +95,7 @@ public class PostersFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("spinner", spinner.getSelectedItemPosition());
+//        outState.putInt("spinner", spinner.getSelectedItemPosition());
     }
 
     @Override
