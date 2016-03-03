@@ -43,11 +43,10 @@ public class MovieModel {
     }
 
     public String getPoster_path() {
-//        String poster_url;
-//        if(poster_path != null){
+        if(poster_path != null){
          return ((String)("http://image.tmdb.org/t/p/w185/" + poster_path));
-//        }
-//      else{  return "http://1vyf1h2a37bmf88hy3i8ce9e.wpengine.netdna-cdn.com/wp-content/themes/public/img/noimgavailable.jpg";}
+        }
+      else{  return "http://1vyf1h2a37bmf88hy3i8ce9e.wpengine.netdna-cdn.com/wp-content/themes/public/img/noimgavailable.jpg";}
     }
 
     public void setPoster_path(String poster_path) {

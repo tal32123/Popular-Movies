@@ -75,7 +75,7 @@ public class ImageAdapter extends BaseAdapter {
         } else {
             imageView = (ImageView) convertView;
         }
-        Picasso.with(mContext).load(imageArray[position])
+        Picasso.with(mContext).load(imageArray[position]).placeholder(R.drawable.temp_poster)
 
                 .into(imageView);
 
