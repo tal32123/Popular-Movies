@@ -41,7 +41,9 @@ public class PostersFragment extends Fragment {
     private static List<MovieModel> movieModelList;
     private static int movieModelListLength;
     GridView gridView;
+    Bundle myBundle;
     ImageAdapter adapter;
+    Spinner spinner;
     private String sort_method;
     public PostersFragment() {
         //sort_method = "popularity.desc";
@@ -60,24 +62,15 @@ public class PostersFragment extends Fragment {
 
          DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         int width = (int) (displayMetrics.widthPixels / displayMetrics.density);
-//
-//        //For Tabs
-////        boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-////        width = isLandscape ? (width / 2) : width;
-//        int numcolumns =(int) (width/(185));
-////
-////        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
-////        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-////        int numcolumns = (int)((185*dp)/dpWidth);
-//        gridView.setNumColumns(numcolumns);
+
         if (getResources().getConfiguration().orientation
                 == 1) {
-            gridView.setNumColumns(2);
-            
+            gridView.setNumColumns(3);
+
 
         } else if ( getResources().getConfiguration().orientation
                 == 2) {
-            gridView.setNumColumns(3);
+            gridView.setNumColumns(5);
 
         }
 
@@ -100,11 +93,21 @@ public class PostersFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("spinner", spinner.getSelectedItemPosition());
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
+        if(savedInstanceState != null) {
+          //  spinner.setSelection(savedInstanceState.getInt("spinner", 0));
+            this.myBundle = savedInstanceState;
 
+        }
     }
 
     @Override
@@ -116,12 +119,18 @@ public class PostersFragment extends Fragment {
 
 
         MenuItem item = menu.findItem(R.id.spinnerr);
-        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
+         spinner = (Spinner) MenuItemCompat.getActionView(item);
 
 
         String[] sortingCriteria = {"Popular", "Highest Rated"};
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinner, sortingCriteria);
         spinner.setAdapter(spinnerAdapter);
+        if(this.myBundle != null){
+            spinner.setSelection(myBundle.getInt("spinner", 0));
+        }
+        else {
+            spinner.setSelection(0);
+         }
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
