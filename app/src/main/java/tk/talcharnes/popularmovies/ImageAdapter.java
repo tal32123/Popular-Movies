@@ -13,17 +13,9 @@ import com.squareup.picasso.Picasso;
  * Created by Tal on 2/24/2016.
  */
 public class ImageAdapter extends BaseAdapter {
+    int pixels;
   //  private static String[] desc = new String[9];
     private static String[] desc = {
-            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
-            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
-            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
-            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
-            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
-            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
-            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
-            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
-            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
             "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg"
     };
     private static String[] imageArray = getDesc();
@@ -64,7 +56,7 @@ public class ImageAdapter extends BaseAdapter {
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
-            int pixels = (int) (mContext.getResources().getDisplayMetrics().density + 0.5f);
+            pixels = (int) (mContext.getResources().getDisplayMetrics().density + 0.5f);
 
 
            imageView.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.MATCH_PARENT));
@@ -75,7 +67,7 @@ public class ImageAdapter extends BaseAdapter {
         } else {
             imageView = (ImageView) convertView;
         }
-        Picasso.with(mContext).load(imageArray[position]).placeholder(R.drawable.temp_poster)
+        Picasso.with(mContext).load(imageArray[position]).placeholder(R.drawable.temp_poster).resize(185*pixels, 277*pixels)
 
                 .into(imageView);
 
