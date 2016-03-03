@@ -16,7 +16,8 @@ public class ImageAdapter extends BaseAdapter {
     int pixels;
   //  private static String[] desc = new String[9];
     private static String[] desc = {
-            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg"
+            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
+
     };
     private static String[] imageArray = getDesc();
     private Context mContext;
@@ -62,13 +63,13 @@ public class ImageAdapter extends BaseAdapter {
            imageView.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.MATCH_PARENT));
 
             imageView.setAdjustViewBounds(true);
-            imageView.setPadding(0, 0, 0, 0);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         } else {
             imageView = (ImageView) convertView;
         }
-        Picasso.with(mContext).load(imageArray[position]).placeholder(R.drawable.temp_poster).resize(185*pixels, 277*pixels)
-
+        Picasso.with(mContext).load(imageArray[position])
+                .placeholder(R.drawable.temp_poster)
+                .resize(185, 277)
                 .into(imageView);
 
         return imageView;

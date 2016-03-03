@@ -35,7 +35,7 @@ public class MovieDetailsFragment extends Fragment {
 
         //set poster into details view
         ImageView poster = (ImageView)rootView.findViewById(R.id.poster);
-        Picasso.with(getContext()).load(movie.getPoster_path()).into(poster);
+        Picasso.with(getContext()).load(movie.getPoster_path()).placeholder(R.drawable.temp_poster).into(poster);
 
         // set movie year in details view
         TextView release_date = (TextView)rootView.findViewById(R.id.release_date);
