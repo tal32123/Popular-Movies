@@ -54,6 +54,7 @@ public class PostersFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
+            updatePosters();
         // should find gridview on the view which you are creating
         gridView = (GridView) view.findViewById(R.id.gridview);
 
@@ -75,6 +76,7 @@ public class PostersFragment extends Fragment {
 
         adapter = new ImageAdapter(getContext());
         gridView.setAdapter(adapter);
+        updatePosters();
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
@@ -232,7 +234,7 @@ public class PostersFragment extends Fragment {
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
-                Log.v(LOG_TAG, url.toString());
+
                 //read input into string
                 InputStream inputStream = urlConnection.getInputStream();
                 StringBuffer buffer = new StringBuffer();
