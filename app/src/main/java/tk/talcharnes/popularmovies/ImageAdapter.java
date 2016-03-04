@@ -69,6 +69,7 @@ public class ImageAdapter extends BaseAdapter {
         }
         Picasso.with(mContext).load(imageArray[position])
                 .placeholder(R.drawable.temp_poster)
+                .error(R.drawable.temp_poster)
                 .resize(185, 277)
                 .into(imageView);
 
