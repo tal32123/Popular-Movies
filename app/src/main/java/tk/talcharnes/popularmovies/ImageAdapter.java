@@ -14,12 +14,8 @@ import com.squareup.picasso.Picasso;
  */
 public class ImageAdapter extends BaseAdapter {
     int pixels;
-  //  private static String[] desc = new String[9];
-    private static String[] desc = {
-            "http://www.jqueryscript.net/images/jQuery-Ajax-Loading-Overlay-with-Loading-Text-Spinner-Plugin.jpg",
 
-    };
-    private static String[] imageArray = getDesc();
+    private static String[] imageArray = getAsc();
     private Context mContext;
     //private String[] asc = new String[PostersFragment.getMovieModelListLength()];
     private static String[] asc = {};
@@ -85,9 +81,7 @@ public class ImageAdapter extends BaseAdapter {
         ImageAdapter.asc = asc;
     }
 
-    public static String[] getDesc() {
-        return desc;
-    }
+
     public static void setImageArray(String[] arrayName){
         imageArray = arrayName;
     }
