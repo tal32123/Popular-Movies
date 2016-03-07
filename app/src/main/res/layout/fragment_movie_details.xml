@@ -27,6 +27,7 @@
             android:layout_height="277dp"
             android:text="Poster"
             android:layout_margin="8dp"
+            android:src="@drawable/temp_poster"
             android:id="@+id/poster"/>
         <LinearLayout
             android:layout_width="wrap_content"
