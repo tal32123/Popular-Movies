@@ -54,6 +54,13 @@
         android:text="Overview"
         android:layout_margin="8dp"
         android:id="@+id/overview"/>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@android:drawable/btn_star"
+        android:id="@+id/favorite"
+        android:onClick="favorited"/>
 </LinearLayout>
 
 </ScrollView>

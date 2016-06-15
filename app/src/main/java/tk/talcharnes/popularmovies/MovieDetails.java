@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.Toast;
 
 public class MovieDetails extends ActionBarActivity {
 
@@ -35,5 +38,11 @@ public class MovieDetails extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    public void favorited(View v){
+        CheckBox favorited = (CheckBox) findViewById(R.id.favorite);
+        if (favorited.isChecked()){
 
+            Toast.makeText(getApplicationContext(), "ITS CHECKED", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
