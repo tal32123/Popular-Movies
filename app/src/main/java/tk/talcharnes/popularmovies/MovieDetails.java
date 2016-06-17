@@ -42,7 +42,11 @@ public class MovieDetails extends ActionBarActivity {
         CheckBox favorited = (CheckBox) findViewById(R.id.favorite);
         if (favorited.isChecked()){
 
-            Toast.makeText(getApplicationContext(), "ITS CHECKED", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Movie added to favorites", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(getApplicationContext(), "Movie removed from favorites", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

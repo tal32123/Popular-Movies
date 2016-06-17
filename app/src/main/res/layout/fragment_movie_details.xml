@@ -46,6 +46,10 @@
             android:layout_margin="8dp"
             android:text="Vote Average"
             android:id="@+id/vote_average"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id = "@+id/trailer_list"/>
         </LinearLayout>
     </LinearLayout>
     <TextView

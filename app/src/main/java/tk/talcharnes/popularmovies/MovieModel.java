@@ -9,6 +9,12 @@ public class MovieModel {
     private String title;
     private String vote_average;
     private String release_date;
+    private String id;
+
+
+    public String getMovieID(){return id;}
+
+    public void setMovieID(String id) {this.id = id;}
 
     public String getOverview() {
         return overview;

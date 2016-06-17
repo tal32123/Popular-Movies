@@ -198,6 +198,7 @@ public class PostersFragment extends Fragment {
             for(int i = 0; i < movieJSonArray.length(); i++){
                 JSONObject movieJsonObject = movieJSonArray.getJSONObject(i);
                 MovieModel movieModel = new MovieModel();
+               movieModel.setMovieID(movieJsonObject.getString("id"));
                 movieModel.setTitle(movieJsonObject.getString("title"));
                 movieModel.setOverview(movieJsonObject.getString("overview"));
                 movieModel.setPoster_path(movieJsonObject.getString("poster_path"));
@@ -223,6 +224,7 @@ public class PostersFragment extends Fragment {
 
                 final String BASE_URL = "https://api.themoviedb.org/3/discover/movie?";
                 final String SORT_PARAM ="sort_by";
+                final String ADD_TRAILERS = "releases,trailers";
 
 
 
@@ -231,6 +233,7 @@ public class PostersFragment extends Fragment {
                         .appendQueryParameter("api_key", BuildConfig.MOVIE_DB_API_KEY).build();
 
                 URL url = new URL(builtUri.toString());
+                Log.i(LOG_TAG, "url" + url);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
