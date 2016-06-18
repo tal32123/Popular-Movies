@@ -21,7 +21,7 @@ import java.util.ArrayList;
  */
 
     public class MovieJSON extends AsyncTask<Void, Void, Void> {
-        private static ArrayList<MovieTrailer> movieTrailerList = new ArrayList<>();
+        private ArrayList<MovieTrailer> movieTrailerList = new ArrayList<>();
         //will contain raw Json data
         String movieExtrasJSONString = null;
         public final String LOG_TAG = MovieJSON.class.getSimpleName();
@@ -54,7 +54,8 @@ import java.util.ArrayList;
 
                 //open connection to api
                 final String BASE_URL = "https://api.themoviedb.org/3/movie/";
-                String movie_id = MovieDetailsFragment.getMovieID() + "?";
+                MovieDetailsFragment movieDetailsFragment = new MovieDetailsFragment();
+                String movie_id = movieDetailsFragment.getMovieID() + "?";
                 final String APPEND_EXTRAS = "append_to_response";
                 final String EXTRAS = "releases,trailers,reviews";
 
@@ -115,7 +116,7 @@ import java.util.ArrayList;
               }
             return null;
             }
-    public static ArrayList<MovieTrailer> getMovieTrailerList(){
+    public ArrayList<MovieTrailer> getMovieTrailerList(){
         return movieTrailerList;
     }
         }

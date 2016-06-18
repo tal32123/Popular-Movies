@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso;
  * A placeholder fragment containing a simple view.
  */
 public class MovieDetailsFragment extends Fragment {
-    private static String id;
+    private String id;
     private String movie_number;
     public MovieDetailsFragment() {
     }
@@ -62,13 +62,9 @@ public class MovieDetailsFragment extends Fragment {
         fetchMovieJSON.execute();
 
         TextView trailerListTextView = (TextView) rootView.findViewById(R.id.trailer_list);
-        String trailerList = "";
-        for (int i = 0; i< MovieJSON.getMovieTrailerList().size(); i++){
-            trailerList = MovieJSON.getMovieTrailerList().get(i).getMovieName();
-            trailerList = trailerList + "\n";
-        }
-        trailerListTextView.setText(trailerList);
+        MovieTrailer movieTrailer = new MovieTrailer();
+        trailerListTextView.setText(movieTrailer.getMovieTrailerList().toString());
         return rootView;
     }
-    public static String getMovieID(){return id;}
+    public String getMovieID(){return id;}
 }
