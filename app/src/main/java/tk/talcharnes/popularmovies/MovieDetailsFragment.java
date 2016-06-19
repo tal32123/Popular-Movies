@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso;
  */
 public class MovieDetailsFragment extends Fragment {
     private String id;
-    private String trailerList;
+    private String trailerList = "";
     private String movie_number;
     public MovieDetailsFragment() {
     }
@@ -63,16 +63,16 @@ public class MovieDetailsFragment extends Fragment {
         MovieJSON fetchMovieJSON = new MovieJSON();
         fetchMovieJSON.execute(id);
 
-        TextView trailerListTextView = (TextView) rootView.findViewById(R.id.trailer_list);
 
         for (int i = 0; i< fetchMovieJSON.getMovieTrailerList().size(); i++){
             Log.v("size", "" + fetchMovieJSON.getMovieTrailerList().size());
-            String trailerListItem = fetchMovieJSON.getMovieTrailerList().get(i).getMovieName();
+            String trailerListItem = fetchMovieJSON.getMovieTrailerList().get(i).getMovieName().toString();
             trailerList = trailerList + " " + trailerListItem;
             Log.v("trailerlist = ", trailerList);
 
         }
 
+        TextView trailerListTextView = (TextView) rootView.findViewById(R.id.trailer_list);
         trailerListTextView.setText(trailerList);
         return rootView;
     }
