@@ -17,6 +17,7 @@ import com.squareup.picasso.Picasso;
  */
 public class MovieDetailsFragment extends Fragment {
     private String id;
+    private String trailerList;
     private String movie_number;
     public MovieDetailsFragment() {
     }
@@ -59,34 +60,20 @@ public class MovieDetailsFragment extends Fragment {
         overview.setText(movie.getOverview());
 
         id = movie.getMovieID();
-        Log.v("eye-d", id);
-        setMovieID(id);
         MovieJSON fetchMovieJSON = new MovieJSON();
         fetchMovieJSON.execute(id);
 
         TextView trailerListTextView = (TextView) rootView.findViewById(R.id.trailer_list);
-        MovieTrailer movieTrailer = new MovieTrailer();
 
+        for (int i = 0; i< fetchMovieJSON.getMovieTrailerList().size(); i++){
+            Log.v("size", "" + fetchMovieJSON.getMovieTrailerList().size());
+            String trailerListItem = fetchMovieJSON.getMovieTrailerList().get(i).getMovieName();
+            trailerList = trailerList + " " + trailerListItem;
+            Log.v("trailerlist = ", trailerList);
 
-        trailerListTextView.setText(getMovieTrailerList());
-        return rootView;
-    }
-    public void setMovieID(String id){
-        this.id = id;
-    }
-    public String getMovieID(){
-        final String LOG_TAG = MovieDetailsFragment.class.getSimpleName();
-        Log.v(LOG_TAG, "id = " + id);
-        return id;}
-    public String getMovieTrailerList(){
-        String trailerList = "";
-        MovieJSON movieJSON = new MovieJSON();
-        movieJSON.execute(getMovieID());
-        for (int i = 0; i< movieJSON.getMovieTrailerList().size(); i++){
-            String trailerListItem = movieJSON.getMovieTrailerList().get(i).getMovieName();
-            trailerList = trailerList + "\n" + trailerListItem;
         }
-        Log.v("tlist = ", trailerList);
-        return trailerList;
+
+        trailerListTextView.setText(trailerList);
+        return rootView;
     }
 }
