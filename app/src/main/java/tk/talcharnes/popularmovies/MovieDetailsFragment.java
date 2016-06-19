@@ -3,6 +3,7 @@ package tk.talcharnes.popularmovies;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,13 +59,34 @@ public class MovieDetailsFragment extends Fragment {
         overview.setText(movie.getOverview());
 
         id = movie.getMovieID();
+        Log.v("eye-d", id);
+        setMovieID(id);
         MovieJSON fetchMovieJSON = new MovieJSON();
-        fetchMovieJSON.execute();
+        fetchMovieJSON.execute(id);
 
         TextView trailerListTextView = (TextView) rootView.findViewById(R.id.trailer_list);
         MovieTrailer movieTrailer = new MovieTrailer();
-        trailerListTextView.setText(movieTrailer.getMovieTrailerList().toString());
+
+
+        trailerListTextView.setText(getMovieTrailerList());
         return rootView;
     }
-    public String getMovieID(){return id;}
+    public void setMovieID(String id){
+        this.id = id;
+    }
+    public String getMovieID(){
+        final String LOG_TAG = MovieDetailsFragment.class.getSimpleName();
+        Log.v(LOG_TAG, "id = " + id);
+        return id;}
+    public String getMovieTrailerList(){
+        String trailerList = "";
+        MovieJSON movieJSON = new MovieJSON();
+        movieJSON.execute(getMovieID());
+        for (int i = 0; i< movieJSON.getMovieTrailerList().size(); i++){
+            String trailerListItem = movieJSON.getMovieTrailerList().get(i).getMovieName();
+            trailerList = trailerList + "\n" + trailerListItem;
+        }
+        Log.v("tlist = ", trailerList);
+        return trailerList;
+    }
 }

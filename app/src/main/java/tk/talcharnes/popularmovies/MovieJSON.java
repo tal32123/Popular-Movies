@@ -20,13 +20,15 @@ import java.util.ArrayList;
  * Created by Tal on 6/16/2016.
  */
 
-    public class MovieJSON extends AsyncTask<Void, Void, Void> {
+    public class MovieJSON extends AsyncTask<String, Void, Void> {
         private ArrayList<MovieTrailer> movieTrailerList = new ArrayList<>();
         //will contain raw Json data
         String movieExtrasJSONString = null;
         public final String LOG_TAG = MovieJSON.class.getSimpleName();
 
-        public Void parseMovieExtraJson()
+
+
+    public Void parseMovieExtraJson()
                 throws JSONException {
             JSONObject jsonParentObject = new JSONObject(movieExtrasJSONString);
             JSONObject trailerJSonArray = jsonParentObject.getJSONObject("trailers");
@@ -44,7 +46,7 @@ import java.util.ArrayList;
 
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(String... params) {
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
@@ -55,7 +57,9 @@ import java.util.ArrayList;
                 //open connection to api
                 final String BASE_URL = "https://api.themoviedb.org/3/movie/";
                 MovieDetailsFragment movieDetailsFragment = new MovieDetailsFragment();
-                String movie_id = movieDetailsFragment.getMovieID() + "?";
+                //String movie_id = movieDetailsFragment.getMovieID() + "?";
+                String movie_id = params[0] + "?";
+               // Log.v(LOG_TAG, "movieid " + movie_id);
                 final String APPEND_EXTRAS = "append_to_response";
                 final String EXTRAS = "releases,trailers,reviews";
 
@@ -65,7 +69,7 @@ import java.util.ArrayList;
                         .appendQueryParameter("api_key", BuildConfig.MOVIE_DB_API_KEY).build();
 
                 URL url = new URL(builtUri.toString());
-                Log.i(LOG_TAG, "url" + url);
+                Log.i(LOG_TAG, "url " + url);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();

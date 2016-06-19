@@ -27,15 +27,6 @@ public class MovieTrailer{
             return trailerUrl;
         }
 
-    public String getMovieTrailerList(){
-        String trailerList = "";
-        MovieJSON movieJSON = new MovieJSON();
-        for (int i = 0; i< movieJSON.getMovieTrailerList().size(); i++){
-            String trailerListItem = movieJSON.getMovieTrailerList().get(i).getMovieName();
-            trailerList = trailerList + "\n" + trailerListItem;
-        }
-        return trailerList;
-    }
 
     }
 
