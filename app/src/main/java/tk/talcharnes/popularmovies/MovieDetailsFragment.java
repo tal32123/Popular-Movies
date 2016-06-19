@@ -1,21 +1,39 @@
 package tk.talcharnes.popularmovies;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MovieDetailsFragment extends Fragment {
+public class MovieDetailsFragment extends Fragment{
     private String id;
     private String trailerList = "";
     private String movie_number;
@@ -64,16 +82,138 @@ public class MovieDetailsFragment extends Fragment {
         fetchMovieJSON.execute(id);
 
 
-        for (int i = 0; i< fetchMovieJSON.getMovieTrailerList().size(); i++){
-            Log.v("size", "" + fetchMovieJSON.getMovieTrailerList().size());
-            String trailerListItem = fetchMovieJSON.getMovieTrailerList().get(i).getMovieName().toString();
-            trailerList = trailerList + " " + trailerListItem;
-            Log.v("trailerlist = ", trailerList);
 
-        }
 
-        TextView trailerListTextView = (TextView) rootView.findViewById(R.id.trailer_list);
-        trailerListTextView.setText(trailerList);
+
         return rootView;
     }
+
+    /**
+     * Created by Tal on 6/16/2016.
+     */
+
+    public class MovieJSON extends AsyncTask<String, Void, Void> implements AdapterView.OnItemClickListener{
+        private ArrayList<MovieTrailer> movieTrailerList = new ArrayList<>();
+        //will contain raw Json data
+        String movieExtrasJSONString = null;
+        public final String LOG_TAG = MovieJSON.class.getSimpleName();
+
+
+
+        public Void parseMovieExtraJson()
+                throws JSONException {
+            JSONObject jsonParentObject = new JSONObject(movieExtrasJSONString);
+            JSONObject trailerJSonArray = jsonParentObject.getJSONObject("trailers");
+            JSONArray youtubeTrailers = trailerJSonArray.getJSONArray("youtube");
+            for(int i = 0; i < youtubeTrailers.length(); i++){
+                JSONObject youtubeTrailerArray = youtubeTrailers.getJSONObject(i);
+                MovieTrailer movieTrailer = new MovieTrailer();
+                movieTrailer.setMovieName(youtubeTrailerArray.getString("name"));
+                movieTrailer.setTrailerUrl("https://www.youtube.com/watch?v=" + youtubeTrailerArray.getString("source"));
+                movieTrailerList.add(movieTrailer);
+            }
+
+            return null;
+        }
+
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+
+            try {
+
+                //open connection to api
+                final String BASE_URL = "https://api.themoviedb.org/3/movie/";
+                MovieDetailsFragment movieDetailsFragment = new MovieDetailsFragment();
+                //String movie_id = movieDetailsFragment.getMovieID() + "?";
+                String movie_id = params[0] + "?";
+                final String APPEND_EXTRAS = "append_to_response";
+                final String EXTRAS = "releases,trailers,reviews";
+
+                Uri builtUri = Uri.parse(BASE_URL).buildUpon()
+                        .appendPath(movie_id)
+                        .appendQueryParameter(APPEND_EXTRAS, EXTRAS)
+                        .appendQueryParameter("api_key", BuildConfig.MOVIE_DB_API_KEY).build();
+
+                URL url = new URL(builtUri.toString());
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                //read input into string
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    //nothing else to do in this case
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    //nothing here, don't parse
+                    return null;
+                }
+
+                movieExtrasJSONString = buffer.toString();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "Error", e);
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+
+                    } catch (final IOException e) {
+                        Log.e(LOG_TAG, "Error closing stream", e);
+                    }
+                }
+            }
+            try{
+
+
+                parseMovieExtraJson();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            ListView listView = (ListView) getActivity().findViewById(R.id.trailer_list);
+            String[] trailerNames = new String[movieTrailerList.size()];
+            for(int i = 0; i < movieTrailerList.size(); i++){
+                trailerNames[i]= movieTrailerList.get(i).getMovieName();
+            }
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1 , trailerNames);
+            listView.setAdapter(arrayAdapter);
+            listView.setOnItemClickListener(this);
+
+
+        }
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            String url = movieTrailerList.get(position).getTrailerUrl().toString();
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+        }
+    }
+
 }
+
+
