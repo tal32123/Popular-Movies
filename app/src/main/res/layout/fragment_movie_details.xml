@@ -64,7 +64,16 @@
         android:layout_height="wrap_content"
         android:button="@android:drawable/btn_star"
         android:id="@+id/favorite"
+        android:layout_margin="8dp"
+        android:text="Add to favorites"
         android:onClick="favorited"/>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:id="@+id/review_listview"
+        android:nestedScrollingEnabled="true">
+    </ListView>
 </LinearLayout>
 
 </ScrollView>

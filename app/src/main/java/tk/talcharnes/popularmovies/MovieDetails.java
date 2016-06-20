@@ -41,10 +41,11 @@ public class MovieDetails extends ActionBarActivity {
     public void favorited(View v){
         CheckBox favorited = (CheckBox) findViewById(R.id.favorite);
         if (favorited.isChecked()){
-
+            favorited.setText("Remove from favorites");
             Toast.makeText(getApplicationContext(), "Movie added to favorites", Toast.LENGTH_SHORT).show();
         }
         else{
+            favorited.setText("Add to favorites");
             Toast.makeText(getApplicationContext(), "Movie removed from favorites", Toast.LENGTH_SHORT).show();
         }
     }

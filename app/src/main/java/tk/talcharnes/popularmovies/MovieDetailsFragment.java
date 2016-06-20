@@ -94,6 +94,7 @@ public class MovieDetailsFragment extends Fragment{
 
     public class MovieJSON extends AsyncTask<String, Void, Void> implements AdapterView.OnItemClickListener{
         private ArrayList<MovieTrailer> movieTrailerList = new ArrayList<>();
+        private ArrayList<MovieReview> movieReviewArrayList = new ArrayList<>();
         //will contain raw Json data
         String movieExtrasJSONString = null;
         public final String LOG_TAG = MovieJSON.class.getSimpleName();
@@ -111,6 +112,15 @@ public class MovieDetailsFragment extends Fragment{
                 movieTrailer.setMovieName(youtubeTrailerArray.getString("name"));
                 movieTrailer.setTrailerUrl("https://www.youtube.com/watch?v=" + youtubeTrailerArray.getString("source"));
                 movieTrailerList.add(movieTrailer);
+            }
+            JSONObject reviewsJsonObject = jsonParentObject.getJSONObject("reviews");
+            JSONArray resultsJsonArray = reviewsJsonObject.getJSONArray("results");
+            for(int i = 0; i < resultsJsonArray.length(); i++){
+                JSONObject reviewObject = resultsJsonArray.getJSONObject(i);
+                MovieReview review = new MovieReview();
+                review.setAuthor(reviewObject.getString("author"));
+                review.setReview(reviewObject.getString("content"));
+                movieReviewArrayList.add(review);
             }
 
             return null;
@@ -197,13 +207,35 @@ public class MovieDetailsFragment extends Fragment{
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             ListView listView = (ListView) getActivity().findViewById(R.id.trailer_list);
-            String[] trailerNames = new String[movieTrailerList.size()];
-            for(int i = 0; i < movieTrailerList.size(); i++){
+
+            //the following code gets all the videos for each movie
+            //this was replaced in order to only have the four latest videos so that the layout looks nicer
+//            String[] trailerNames = new String[movieTrailerList.size()];
+//            for(int i = 0; i < movieTrailerList.size(); i++){
+//                trailerNames[i]= movieTrailerList.get(i).getMovieName();
+//            }
+
+            //replace this with previous/commented out code to get ALL videos for each movie
+            //note this can mess up the layout
+            int listSize;
+            if (movieTrailerList.size() > 4){
+                listSize = 4;
+            }
+            else {
+                listSize = movieTrailerList.size();
+            }
+            String[] trailerNames = new String[listSize];
+            for(int i = 0; i < listSize; i++){
                 trailerNames[i]= movieTrailerList.get(i).getMovieName();
             }
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1 , trailerNames);
             listView.setAdapter(arrayAdapter);
             listView.setOnItemClickListener(this);
+
+
+            ListView reviewListView = (ListView) getActivity().findViewById(R.id.review_listview);
+            ReviewAdapter movieReviewReviewAdapter = new ReviewAdapter(getActivity(), movieReviewArrayList);
+            reviewListView.setAdapter(movieReviewReviewAdapter);
 
 
         }
