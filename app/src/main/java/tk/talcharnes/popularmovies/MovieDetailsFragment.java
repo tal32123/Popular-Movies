@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -69,9 +70,13 @@ public class MovieDetailsFragment extends Fragment{
             release_date.setText((movie.getRelease_date()));
         };
 
-        //set vote average in details view
-        TextView vote_average = (TextView) rootView.findViewById(R.id.vote_average);
-        vote_average.setText(movie.getVote_average() + " /10");
+
+        //Set vote average rating bar
+        RatingBar ratingBar = (RatingBar) rootView.findViewById(R.id.rating_bar);
+        ratingBar.setIsIndicator(true);
+        float rating = (float) (Float.parseFloat(movie.getVote_average()));
+        ratingBar.setRating(rating);
+
 
         //set overview in details view
         TextView overview = (TextView) rootView.findViewById(R.id.overview);

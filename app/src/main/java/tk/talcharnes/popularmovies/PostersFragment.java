@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,14 +38,13 @@ import java.util.List;
  */
 public class PostersFragment extends Fragment {
     private static List<MovieModel> movieModelList;
-    private static int movieModelListLength;
+    private int movieModelListLength;
     GridView gridView;
     Bundle myBundle;
     ImageAdapter adapter;
     Spinner spinner;
     private String sort_method;
     public PostersFragment() {
-        //sort_method = "popularity.desc";
     }
 
     @Override
@@ -54,14 +52,8 @@ public class PostersFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-            updatePosters();
-        // should find gridview on the view which you are creating
+
         gridView = (GridView) view.findViewById(R.id.gridview);
-
-
-
-         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        int width = (int) (displayMetrics.widthPixels / displayMetrics.density);
 
         if (getResources().getConfiguration().orientation
                 == 1) {
@@ -76,7 +68,6 @@ public class PostersFragment extends Fragment {
 
         adapter = new ImageAdapter(getContext());
         gridView.setAdapter(adapter);
-        updatePosters();
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
@@ -104,7 +95,7 @@ public class PostersFragment extends Fragment {
         setHasOptionsMenu(true);
 
         if(savedInstanceState != null) {
-          //  spinner.setSelection(savedInstanceState.getInt("spinner", 0));
+         //  spinner.setSelection(savedInstanceState.getInt("spinner", 0));
             this.myBundle = savedInstanceState;
 
         }
@@ -122,7 +113,7 @@ public class PostersFragment extends Fragment {
          spinner = (Spinner) MenuItemCompat.getActionView(item);
 
 
-        String[] sortingCriteria = {"Popular", "Highest Rated"};
+        String[] sortingCriteria = {"Popular", "Highest Rated", "Favorites"};
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinner, sortingCriteria);
         spinner.setAdapter(spinnerAdapter);
         if(this.myBundle != null){
@@ -141,6 +132,9 @@ public class PostersFragment extends Fragment {
                 else if (position == 1){
                     sort_method = "vote_average.desc";
                     updatePosters();
+                }
+                else if (position == 2){
+                    Toast.makeText(getContext(), "Favorites is not yet available", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -224,16 +218,17 @@ public class PostersFragment extends Fragment {
 
                 final String BASE_URL = "https://api.themoviedb.org/3/discover/movie?";
                 final String SORT_PARAM ="sort_by";
-                final String ADD_TRAILERS = "releases,trailers";
-
+                final String MINIMUM_VOTES_PARAM="vote_count.gte";
+                final String MINIMUM_VOTES= 500+"";
 
 
                 Uri builtUri = Uri.parse(BASE_URL).buildUpon()
                         .appendQueryParameter(SORT_PARAM, sort_method)
+                        .appendQueryParameter(MINIMUM_VOTES_PARAM, MINIMUM_VOTES)
                         .appendQueryParameter("api_key", BuildConfig.MOVIE_DB_API_KEY).build();
 
                 URL url = new URL(builtUri.toString());
-                Log.i(LOG_TAG, "url" + url);
+                Log.i(LOG_TAG, "url " + url);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
@@ -302,9 +297,6 @@ public class PostersFragment extends Fragment {
     }
     public static List<MovieModel> getMovieModelList(){
         return movieModelList;
-    }
-    public static int getMovieModelListLength(){
-        return movieModelListLength;
     }
 
 }
