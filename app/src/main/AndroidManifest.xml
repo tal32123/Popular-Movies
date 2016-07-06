@@ -33,6 +33,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="tk.talcharnes.popularmovies.MainActivity" />
         </activity>
+        <provider
+            android:authorities="tk.talcharnes.popularmovies.db"
+            android:name=".db.MovieProvider"/>
     </application>
 
 </manifest>
