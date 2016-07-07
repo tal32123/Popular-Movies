@@ -38,6 +38,7 @@ public class MovieDetailsFragment extends Fragment{
     private String id;
     private String trailerList = "";
     private String movie_number;
+    private static MovieModel movie;
     public MovieDetailsFragment() {
     }
 
@@ -49,7 +50,7 @@ public class MovieDetailsFragment extends Fragment{
         //get movie object in order to extract details
         Intent intent = getActivity().getIntent();
         int movie_number = intent.getIntExtra("Movie_number", 0);
-        MovieModel movie = PostersFragment.getMovieModelList().get(movie_number);
+        movie = PostersFragment.getMovieModelList().get(movie_number);
 
         //set title in details view
         TextView titleView = (TextView) rootView.findViewById(R.id.movie_details_text);
@@ -92,7 +93,9 @@ public class MovieDetailsFragment extends Fragment{
 
         return rootView;
     }
-
+    public static MovieModel getMovie(){
+        return movie;
+    }
     /**
      * Created by Tal on 6/16/2016.
      */

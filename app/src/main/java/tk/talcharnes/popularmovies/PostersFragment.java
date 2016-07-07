@@ -1,5 +1,6 @@
 package tk.talcharnes.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -32,6 +33,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
+
+import tk.talcharnes.popularmovies.db.MovieContract;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -43,6 +47,7 @@ public class PostersFragment extends Fragment {
     Bundle myBundle;
     ImageAdapter adapter;
     Spinner spinner;
+    int spinnerPosition;
     private String sort_method;
     public PostersFragment() {
     }
@@ -127,13 +132,16 @@ public class PostersFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if(position == 0){
                     sort_method = "popularity.desc";
+                    spinnerPosition = 0;
                     updatePosters();
                 }
                 else if (position == 1){
                     sort_method = "vote_average.desc";
+                    spinnerPosition = 1;
                     updatePosters();
                 }
                 else if (position == 2){
+                    spinnerPosition = 2;
                     Toast.makeText(getContext(), "Favorites is not yet available", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -183,6 +191,7 @@ public class PostersFragment extends Fragment {
         //will contain raw Json data
         String posterJsonString = null;
 
+
         public Void parseMovieJson()
                 throws JSONException{
             JSONObject jsonParentObject = new JSONObject(posterJsonString);
@@ -203,6 +212,63 @@ public class PostersFragment extends Fragment {
                 movieModelList.add(movieModel);
             }
             return null;
+        }
+        public void addMoviesToDb() throws JSONException {
+            JSONObject jsonParentObject = new JSONObject(posterJsonString);
+            JSONArray movieJSonArray = jsonParentObject.getJSONArray("results");
+
+            Vector<ContentValues> cVVector = new Vector<ContentValues>(movieJSonArray.length());
+            for (int i = 0; i < movieJSonArray.length(); i++) {
+                JSONObject movieJsonObject = movieJSonArray.getJSONObject(i);
+                String id = movieJsonObject.getString("id");
+                String title = movieJsonObject.getString("title");
+                String overview = movieJsonObject.getString("overview");
+                String poster_path = movieJsonObject.getString("poster_path");
+                String release_date = movieJsonObject.getString("release_date");
+                String vote_average = movieJsonObject.getString("vote_average");
+                ContentValues movieValues = new ContentValues();
+                switch (spinnerPosition){
+                    case 0: {
+                        movieValues.put(MovieContract.PopularEntry.COLUMN_ID, id);
+                        movieValues.put(MovieContract.PopularEntry.COLUMN_TITLE, title);
+                        movieValues.put(MovieContract.PopularEntry.COLUMN_OVERVIEW, overview);
+                        movieValues.put(MovieContract.PopularEntry.COLUMN_POSTER_PATH, poster_path);
+                        movieValues.put(MovieContract.PopularEntry.COLUMN_RELEASE_DATE, release_date);
+                        movieValues.put(MovieContract.PopularEntry.COLUMN_VOTE_AVERAGE, vote_average);
+                        cVVector.add(movieValues);
+                        break;
+                    }
+                    case 1: {
+                        movieValues.put(MovieContract.RatingEntry.COLUMN_ID, id);
+                        movieValues.put(MovieContract.RatingEntry.COLUMN_TITLE, title);
+                        movieValues.put(MovieContract.RatingEntry.COLUMN_OVERVIEW, overview);
+                        movieValues.put(MovieContract.RatingEntry.COLUMN_POSTER_PATH, poster_path);
+                        movieValues.put(MovieContract.RatingEntry.COLUMN_RELEASE_DATE, release_date);
+                        movieValues.put(MovieContract.RatingEntry.COLUMN_VOTE_AVERAGE, vote_average);
+                        cVVector.add(movieValues);
+                        break;
+                    }
+                    case 2: {
+                        break;
+                    }
+                }
+                if (cVVector.size() > 0){
+                    ContentValues[] cvArray = new ContentValues[cVVector.size()];
+                    cVVector.toArray(cvArray);
+                    switch (spinnerPosition){
+                        case 0:
+                            getContext().getContentResolver().bulkInsert(MovieContract.PopularEntry.CONTENT_URI, cvArray);
+                            break;
+                        case 1:
+                            getContext().getContentResolver().bulkInsert(MovieContract.RatingEntry.CONTENT_URI, cvArray);
+                        case 2:
+                            //// TODO: 7/6/2016 figure out how to insert to db favorites
+//                            getContext().getContentResolver().bulkInsert(MovieContract.FavoritesEntry.CONTENT_URI, cvArray);
+                            break;
+                    }
+                }
+
+            }
         }
 
         @Override
@@ -291,6 +357,7 @@ public class PostersFragment extends Fragment {
                 asc[i]=(getMovieModelList().get(i).getPoster_path());
 
             }
+
             adapter.setImageArray(asc);
             adapter.notifyDataSetChanged();
         }
