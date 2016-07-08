@@ -14,10 +14,8 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 
 import tk.talcharnes.popularmovies.db.MovieContract;
-import tk.talcharnes.popularmovies.db.MovieProvider;
 
 public class MovieDetails extends ActionBarActivity {
-    MovieProvider movieProvider;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +27,6 @@ public class MovieDetails extends ActionBarActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Movie Details");
-        movieProvider = new MovieProvider();
     }
 
     @Override
@@ -60,18 +57,20 @@ public class MovieDetails extends ActionBarActivity {
             Cursor favoriteCursor = getContentResolver().query(
                     MovieContract.FavoritesEntry.CONTENT_URI,
                     new String[]{MovieContract.FavoritesEntry._ID},
-                    MovieContract.FavoritesEntry.COLUMN_ID + " = ?",
+                    MovieContract.FavoritesEntry.COLUMN_ID + " = ? ",
                     new String[]{movieID},
                     null
             );
-            if(favoriteCursor != null){
+
+
+
             if (favoriteCursor.moveToFirst()) {
                 int movieIdIndex = favoriteCursor.getColumnIndex(MovieContract.FavoritesEntry._ID);
                 //not same as movieID. This is the _ID column where movieID is the ID for themoviedb.org
                 long movie_id = favoriteCursor.getLong(movieIdIndex);
                 Log.i("fav availabe. _id = ", "" + movie_id);
             }
-            }
+
             else {
                 ContentValues movieValues = new ContentValues();
                 movieValues.put(MovieContract.FavoritesEntry.COLUMN_ID, movieID);
@@ -82,12 +81,16 @@ public class MovieDetails extends ActionBarActivity {
                 movieValues.put(MovieContract.FavoritesEntry.COLUMN_VOTE_AVERAGE, movie.getVote_average());
 
                 Uri insertedUri =
-                movieProvider.insert(MovieContract.FavoritesEntry.CONTENT_URI, movieValues);
+                        getContentResolver().insert(MovieContract.FavoritesEntry.CONTENT_URI, movieValues);
 
                 long movie_id = ContentUris.parseId(insertedUri);
                 Log.i("fav created. _id = ", ""+ movie_id);
+                Log.i("Path = ", getApplicationContext().getDatabasePath(MovieContract.FavoritesEntry.TABLE_NAME).toString());
+
             }
-            favoriteCursor.close();
+
+                favoriteCursor.close();
+
 
         }
         else{
@@ -95,9 +98,9 @@ public class MovieDetails extends ActionBarActivity {
             Toast.makeText(getApplicationContext(), "Movie removed from favorites", Toast.LENGTH_SHORT).show();
 
             //// TODO: 7/7/2016 delete movie from favorites db
-                int rowsDeleted = movieProvider.delete(
+                int rowsDeleted = getContentResolver().delete(
                         MovieContract.FavoritesEntry.CONTENT_URI,
-                        MovieContract.FavoritesEntry.COLUMN_ID,
+                        MovieContract.FavoritesEntry.COLUMN_ID + " = ?",
                         new String[]{movieID}
                 );
                 Log.i("Rows deleted: ", ""+ rowsDeleted);
