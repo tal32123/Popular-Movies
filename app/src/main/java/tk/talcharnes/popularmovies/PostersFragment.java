@@ -214,8 +214,11 @@ public class PostersFragment extends Fragment {
             return null;
         }
         public void addMoviesToDb() throws JSONException {
+
+
             JSONObject jsonParentObject = new JSONObject(posterJsonString);
             JSONArray movieJSonArray = jsonParentObject.getJSONArray("results");
+
 
             Vector<ContentValues> cVVector = new Vector<ContentValues>(movieJSonArray.length());
             for (int i = 0; i < movieJSonArray.length(); i++) {
@@ -262,13 +265,12 @@ public class PostersFragment extends Fragment {
                         case 1:
                             getContext().getContentResolver().bulkInsert(MovieContract.RatingEntry.CONTENT_URI, cvArray);
                         case 2:
-                            //// TODO: 7/6/2016 figure out how to insert to db favorites
-//                            getContext().getContentResolver().bulkInsert(MovieContract.FavoritesEntry.CONTENT_URI, cvArray);
                             break;
                     }
                 }
 
             }
+
         }
 
         @Override
@@ -341,7 +343,8 @@ public class PostersFragment extends Fragment {
                 }
             }
             try{
-                parseMovieJson();;
+                parseMovieJson();
+                addMoviesToDb();
             } catch (JSONException e) {
                 e.printStackTrace();
             }

@@ -10,7 +10,7 @@ import android.util.Log;
  */
 public class MovieDBHelper extends SQLiteOpenHelper {
     private static String LOG_TAG = MovieDBHelper.class.getSimpleName();
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     static final String DATABASE_NAME = "movie.db";
 
     public MovieDBHelper(Context context){

@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Checks to see if there is internet connection or not. If so, it brings you into the proper layout.
         //Otherwise it brings you to a layout stating that a connection is necessary to continue (and it has a refresh button)
-        if(savedInstanceState==null && isNetworkAvailable()){
+        if(savedInstanceState==null){ //&& isNetworkAvailable()){
         setContentView(R.layout.activity_main);
 
 
@@ -28,10 +28,10 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.fragment, new PostersFragment())
                     .commit();
         }
-        else {
-            setContentView(R.layout.no_network);
-
-        }
+//        else {
+//            setContentView(R.layout.no_network);
+//
+//        }
     }
     //refresh button for once a connection is established
     public void refresh(View view){

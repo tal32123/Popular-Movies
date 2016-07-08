@@ -53,7 +53,7 @@ public class MovieDetails extends ActionBarActivity {
             Toast.makeText(getApplicationContext(), "Movie added to favorites", Toast.LENGTH_SHORT).show();
 
 
-            //// TODO: 7/7/2016 add movie to favorites db
+            //// TODO: 7/7/2016 make favorites button stay highlighted if favorite is clicked
             Cursor favoriteCursor = getContentResolver().query(
                     MovieContract.FavoritesEntry.CONTENT_URI,
                     new String[]{MovieContract.FavoritesEntry._ID},
