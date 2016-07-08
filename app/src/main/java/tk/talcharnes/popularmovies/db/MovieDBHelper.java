@@ -27,23 +27,23 @@ public class MovieDBHelper extends SQLiteOpenHelper {
                 + MovieContract.FavoritesEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL, "
                 + MovieContract.FavoritesEntry.COLUMN_VOTE_AVERAGE + " TEXT NOT NULL" + " );";
 
-        final String SQL_CREATE_POPULAR_TABLE = "CREATE TABLE IF NOT EXISTS " + MovieContract.FavoritesEntry.TABLE_NAME + " ( "
-                + MovieContract.FavoritesEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + MovieContract.FavoritesEntry.COLUMN_ID + " TEXT NOT NULL, "
-                + MovieContract.FavoritesEntry.COLUMN_POSTER_PATH + " TEXT, "
-                + MovieContract.FavoritesEntry.COLUMN_TITLE + " TEXT NOT NULL, "
-                + MovieContract.FavoritesEntry.COLUMN_OVERVIEW + " TEXT NOT NULL, "
-                + MovieContract.FavoritesEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL, "
-                + MovieContract.FavoritesEntry.COLUMN_VOTE_AVERAGE + " TEXT NOT NULL" + " );";
+        final String SQL_CREATE_POPULAR_TABLE = "CREATE TABLE IF NOT EXISTS " + MovieContract.PopularEntry.TABLE_NAME + " ( "
+                + MovieContract.PopularEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + MovieContract.PopularEntry.COLUMN_ID + " TEXT NOT NULL, "
+                + MovieContract.PopularEntry.COLUMN_POSTER_PATH + " TEXT, "
+                + MovieContract.PopularEntry.COLUMN_TITLE + " TEXT NOT NULL, "
+                + MovieContract.PopularEntry.COLUMN_OVERVIEW + " TEXT NOT NULL, "
+                + MovieContract.PopularEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL, "
+                + MovieContract.PopularEntry.COLUMN_VOTE_AVERAGE + " TEXT NOT NULL" + " );";
 
-        final String SQL_CREATE_RATING_TABLE = "CREATE TABLE IF NOT EXISTS " + MovieContract.FavoritesEntry.TABLE_NAME + " ( "
-                + MovieContract.FavoritesEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + MovieContract.FavoritesEntry.COLUMN_ID + " TEXT NOT NULL, "
-                + MovieContract.FavoritesEntry.COLUMN_POSTER_PATH + " TEXT, "
-                + MovieContract.FavoritesEntry.COLUMN_TITLE + " TEXT NOT NULL, "
-                + MovieContract.FavoritesEntry.COLUMN_OVERVIEW + " TEXT NOT NULL, "
-                + MovieContract.FavoritesEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL, "
-                + MovieContract.FavoritesEntry.COLUMN_VOTE_AVERAGE + " TEXT NOT NULL" + " );";
+        final String SQL_CREATE_RATING_TABLE = "CREATE TABLE IF NOT EXISTS " + MovieContract.RatingEntry.TABLE_NAME + " ( "
+                + MovieContract.RatingEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + MovieContract.RatingEntry.COLUMN_ID + " TEXT NOT NULL, "
+                + MovieContract.RatingEntry.COLUMN_POSTER_PATH + " TEXT, "
+                + MovieContract.RatingEntry.COLUMN_TITLE + " TEXT NOT NULL, "
+                + MovieContract.RatingEntry.COLUMN_OVERVIEW + " TEXT NOT NULL, "
+                + MovieContract.RatingEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL, "
+                + MovieContract.RatingEntry.COLUMN_VOTE_AVERAGE + " TEXT NOT NULL" + " );";
 
         db.execSQL(SQL_CREATE_FAVORITES_TABLE);
         Log.i(LOG_TAG, "Creating table with query: " + SQL_CREATE_FAVORITES_TABLE);

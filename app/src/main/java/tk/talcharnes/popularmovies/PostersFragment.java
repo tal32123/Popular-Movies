@@ -230,7 +230,7 @@ public class PostersFragment extends Fragment {
                 String release_date = movieJsonObject.getString("release_date");
                 String vote_average = movieJsonObject.getString("vote_average");
                 ContentValues movieValues = new ContentValues();
-                switch (spinnerPosition){
+                switch (spinnerPosition) {
                     case 0: {
                         movieValues.put(MovieContract.PopularEntry.COLUMN_ID, id);
                         movieValues.put(MovieContract.PopularEntry.COLUMN_TITLE, title);
@@ -255,6 +255,7 @@ public class PostersFragment extends Fragment {
                         break;
                     }
                 }
+            }
                 if (cVVector.size() > 0){
                     ContentValues[] cvArray = new ContentValues[cVVector.size()];
                     cVVector.toArray(cvArray);
@@ -269,7 +270,7 @@ public class PostersFragment extends Fragment {
                     }
                 }
 
-            }
+
 
         }
 
