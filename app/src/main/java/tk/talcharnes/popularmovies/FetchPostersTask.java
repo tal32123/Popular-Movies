@@ -1,6 +1,7 @@
 package tk.talcharnes.popularmovies;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -25,8 +26,8 @@ import tk.talcharnes.popularmovies.db.MovieContract;
  */ //Get movie posters and data
 public class FetchPostersTask extends AsyncTask<Void, Void, Void> {
     private PostersFragment postersFragment;
+
     private final String LOG_TAG = FetchPostersTask.class.getSimpleName();
-    private android.widget.CursorAdapter cursorAdapter;
     //will contain raw Json data
     String posterJsonString = null;
 
@@ -97,7 +98,12 @@ public class FetchPostersTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-
+        int rowsDeleted = postersFragment.getContext().getContentResolver().delete(
+                postersFragment.sortUri,
+                null,
+                null
+        );
+        Log.i("Rows Deleted", " " + rowsDeleted);
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
@@ -172,14 +178,15 @@ public class FetchPostersTask extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         String sortOrder = "vote_average " + "ASC";
-        postersFragment.posterCursor = postersFragment.getContext().getContentResolver().query(
+         Cursor posterCursor = postersFragment.getContext().getContentResolver().query(
                 postersFragment.sortUri,
                 new String[]{"poster_path"},
                 null,
                 null,
                 sortOrder
         );
+        postersFragment.posterCursor = posterCursor;
+        postersFragment.adapter.changeCursor(posterCursor);
         postersFragment.adapter.notifyDataSetChanged();
-
     }
 }

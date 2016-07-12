@@ -28,7 +28,7 @@ public class PostersFragment extends Fragment {
     Bundle myBundle;
     Uri sortUri;
     Cursor posterCursor;
-    android.widget.CursorAdapter adapter;
+    PosterAdapter adapter;
     Spinner spinner;
     int spinnerPosition;
     private String sort_method;
@@ -42,20 +42,7 @@ public class PostersFragment extends Fragment {
 
 
         gridView = (GridView) view.findViewById(R.id.gridview);
-
-        if (getResources().getConfiguration().orientation
-                == 1) {
-            gridView.setNumColumns(3);
-
-
-        } else if ( getResources().getConfiguration().orientation
-                == 2) {
-            gridView.setNumColumns(5);
-
-        }
-
-
-        adapter = new CursorAdapter(getContext(), posterCursor, 0);
+        adapter = new PosterAdapter(getContext(), posterCursor, 0);
         gridView.setAdapter(adapter);
 
         return view;
@@ -81,9 +68,7 @@ public class PostersFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //commented out until a settings menu is implemented
-      //  super.onCreateOptionsMenu(menu, inflater);
-      //  getActivity().getMenuInflater().inflate(R.menu.menu_main, menu);
+
         inflater.inflate(R.menu.menu_refresh, menu);
 
 
@@ -143,7 +128,6 @@ public class PostersFragment extends Fragment {
                     Toast.LENGTH_SHORT).show();
 
            updatePosters();
-            gridView.setAdapter(adapter);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -151,7 +135,6 @@ public class PostersFragment extends Fragment {
     public void updatePosters(){
         FetchPostersTask updatePosters = new FetchPostersTask(this);
         updatePosters.execute();
-
     }
 public String getSort_method(){
     return sort_method;

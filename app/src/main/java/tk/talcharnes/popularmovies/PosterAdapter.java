@@ -13,8 +13,8 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by Tal on 7/11/2016.
  */
-public class CursorAdapter extends android.widget.CursorAdapter {
-    public CursorAdapter(Context context, Cursor c, int flags) {
+public class PosterAdapter extends android.widget.CursorAdapter {
+    public PosterAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }
 
@@ -33,7 +33,6 @@ public class CursorAdapter extends android.widget.CursorAdapter {
         Picasso.with(context).load(poster_path)
                 .placeholder(R.drawable.temp_poster)
                 .resize(185, 277)
-                .into((ImageView)view);
-        cursor.close();
+                .into((ImageView) view);
     }
 }
