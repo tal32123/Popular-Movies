@@ -1,6 +1,7 @@
 package tk.talcharnes.popularmovies;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,10 +36,13 @@ import java.util.ArrayList;
  * A placeholder fragment containing a simple view.
  */
 public class MovieDetailsFragment extends Fragment{
-    private String id;
-    private String trailerList = "";
-    private String movie_number;
-    private static MovieModel movie;
+
+    private static String title;
+    private static String id;
+    private static String release_date_string;
+    private static String poster_path;
+    private static String overview_string;
+    private static String vote_average;
     public MovieDetailsFragment() {
     }
 
@@ -49,41 +53,57 @@ public class MovieDetailsFragment extends Fragment{
 
         //get movie object in order to extract details
         Intent intent = getActivity().getIntent();
-        int movie_number = intent.getIntExtra("Movie_number", 0);
-        movie = PostersFragment.getMovieModelList().get(movie_number);
+        String movie_number = intent.getStringExtra("Movie_number");
+        Uri movie_uri = Uri.parse(movie_number);
+        Cursor cursor = getContext().getContentResolver().query(
+                movie_uri,
+                null,
+                null,
+                null,
+                null);
+        title = cursor.getString(cursor.getColumnIndex("title"));
+        release_date_string = cursor.getString(cursor.getColumnIndex("release_date"));
+        poster_path = cursor.getString(cursor.getColumnIndex("poster_path"));
+        overview_string = cursor.getString(cursor.getColumnIndex("overview"));
+        vote_average = cursor.getString(cursor.getColumnIndex("vote_average"));
+        id = cursor.getString(cursor.getColumnIndex("id"));
+
+
+
+
+
 
         //set title in details view
         TextView titleView = (TextView) rootView.findViewById(R.id.movie_details_text);
-        titleView.setText(movie.getTitle());
+        titleView.setText(title);
 
         //set poster into details view
         ImageView poster = (ImageView)rootView.findViewById(R.id.poster);
-        Picasso.with(getContext()).load(movie.getPoster_path()).placeholder(R.drawable.temp_poster).into(poster);
+        Picasso.with(getContext()).load(poster_path).placeholder(R.drawable.temp_poster).into(poster);
 
         // set movie year in details view
         TextView release_date = (TextView)rootView.findViewById(R.id.release_date);
-        if(movie.getRelease_date().length() > 3){
-        release_date.setText(movie.getRelease_date().substring(0,4));}
-        else if (movie.getRelease_date() == null){
+        if(release_date_string.length() > 3){
+        release_date.setText(release_date_string.substring(0,4));}
+        else if (release_date_string == null){
             release_date.setText("Release date not available");
         }
         else{
-            release_date.setText((movie.getRelease_date()));
+            release_date.setText(release_date_string);
         };
 
 
         //Set vote average rating bar
         RatingBar ratingBar = (RatingBar) rootView.findViewById(R.id.rating_bar);
         ratingBar.setIsIndicator(true);
-        float rating = (float) (Float.parseFloat(movie.getVote_average()));
+        float rating = (float) (Float.parseFloat(vote_average));
         ratingBar.setRating(rating);
 
 
         //set overview in details view
         TextView overview = (TextView) rootView.findViewById(R.id.overview);
-        overview.setText(movie.getOverview());
+        overview.setText(overview_string);
 
-        id = movie.getMovieID();
         MovieJSON fetchMovieJSON = new MovieJSON();
         fetchMovieJSON.execute(id);
 
@@ -92,9 +112,6 @@ public class MovieDetailsFragment extends Fragment{
 
 
         return rootView;
-    }
-    public static MovieModel getMovie(){
-        return movie;
     }
     /**
      * Created by Tal on 6/16/2016.
@@ -252,6 +269,40 @@ public class MovieDetailsFragment extends Fragment{
             String url = movieTrailerList.get(position).getTrailerUrl().toString();
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
         }
+    }
+
+
+    public static String getMovieID(){return id;}
+
+    public static String getOverview() {
+        return overview_string;
+    }
+
+
+
+    public static String getTitle() {
+        return title;
+    }
+
+
+    public static String getVote_average() {
+        return vote_average;
+    }
+
+
+
+    public static String getRelease_date() {
+        return release_date_string;
+    }
+
+
+
+    public static String getPoster_path() {
+        if(poster_path != null){
+            return ( poster_path);
+        }
+        else{
+            return "http://1vyf1h2a37bmf88hy3i8ce9e.wpengine.netdna-cdn.com/wp-content/themes/public/img/noimgavailable.jpg";}
     }
 
 }

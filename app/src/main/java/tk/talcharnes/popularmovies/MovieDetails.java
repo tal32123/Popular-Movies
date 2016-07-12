@@ -45,8 +45,7 @@ public class MovieDetails extends ActionBarActivity {
     }
     public void favorited(View v){
         CheckBox favorited = (CheckBox) findViewById(R.id.favorite);
-        MovieModel movie = MovieDetailsFragment.getMovie();
-        String movieID = movie.getMovieID();
+        String movieID = MovieDetailsFragment.getMovieID();
 
         if (favorited.isChecked()){
             favorited.setText("Remove from favorites");
@@ -74,11 +73,11 @@ public class MovieDetails extends ActionBarActivity {
             else {
                 ContentValues movieValues = new ContentValues();
                 movieValues.put(MovieContract.FavoritesEntry.COLUMN_ID, movieID);
-                movieValues.put(MovieContract.FavoritesEntry.COLUMN_OVERVIEW, movie.getOverview());
-                movieValues.put(MovieContract.FavoritesEntry.COLUMN_POSTER_PATH, movie.getPoster_path());
-                movieValues.put(MovieContract.FavoritesEntry.COLUMN_RELEASE_DATE, movie.getRelease_date());
-                movieValues.put(MovieContract.FavoritesEntry.COLUMN_TITLE, movie.getTitle());
-                movieValues.put(MovieContract.FavoritesEntry.COLUMN_VOTE_AVERAGE, movie.getVote_average());
+                movieValues.put(MovieContract.FavoritesEntry.COLUMN_OVERVIEW, MovieDetailsFragment.getOverview());
+                movieValues.put(MovieContract.FavoritesEntry.COLUMN_POSTER_PATH, MovieDetailsFragment.getPoster_path());
+                movieValues.put(MovieContract.FavoritesEntry.COLUMN_RELEASE_DATE, MovieDetailsFragment.getRelease_date());
+                movieValues.put(MovieContract.FavoritesEntry.COLUMN_TITLE, MovieDetailsFragment.getTitle());
+                movieValues.put(MovieContract.FavoritesEntry.COLUMN_VOTE_AVERAGE, MovieDetailsFragment.getVote_average());
 
                 Uri insertedUri =
                         getContentResolver().insert(MovieContract.FavoritesEntry.CONTENT_URI, movieValues);
