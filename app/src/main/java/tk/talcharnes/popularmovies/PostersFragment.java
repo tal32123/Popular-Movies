@@ -1,5 +1,6 @@
 package tk.talcharnes.popularmovies;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,6 +37,11 @@ public class PostersFragment extends Fragment {
     }
 
     @Override
+    public LayoutInflater getLayoutInflater(Bundle savedInstanceState) {
+        return super.getLayoutInflater(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
@@ -43,6 +49,22 @@ public class PostersFragment extends Fragment {
 
         gridView = (GridView) view.findViewById(R.id.gridview);
         adapter = new PosterAdapter(getContext(), posterCursor, 0);
+
+
+       gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                posterCursor.moveToLast();
+                Long lastID = posterCursor.getLong(posterCursor.getColumnIndex("_id"));
+                String realPosition = ""+(lastID-20+position);
+
+                Intent intent = new Intent(getActivity(), MovieDetails.class);
+                intent.putExtra("Movie_id", realPosition);
+                intent.putExtra("uri", sortUri.toString());
+                startActivity(intent);
+            }
+        });
         gridView.setAdapter(adapter);
 
         return view;

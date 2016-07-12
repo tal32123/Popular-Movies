@@ -37,12 +37,12 @@ import java.util.ArrayList;
  */
 public class MovieDetailsFragment extends Fragment{
 
-    private static String title;
-    private static String id;
-    private static String release_date_string;
-    private static String poster_path;
-    private static String overview_string;
-    private static String vote_average;
+    private String title;
+    private String id;
+    private String release_date_string;
+    private String poster_path;
+    private String overview_string;
+    private String vote_average;
     public MovieDetailsFragment() {
     }
 
@@ -53,21 +53,25 @@ public class MovieDetailsFragment extends Fragment{
 
         //get movie object in order to extract details
         Intent intent = getActivity().getIntent();
-        String movie_number = intent.getStringExtra("Movie_number");
-        Uri movie_uri = Uri.parse(movie_number);
+        String movie_number = intent.getStringExtra("Movie_id");
+        Log.i("Movienumber ", movie_number);
+        Uri movie_uri = Uri.parse(intent.getStringExtra("uri"));
+        Log.i("URI ", movie_uri.toString());
         Cursor cursor = getContext().getContentResolver().query(
                 movie_uri,
                 null,
-                null,
-                null,
+                "id = ? ",
+                new String[]{movie_number},
                 null);
-        title = cursor.getString(cursor.getColumnIndex("title"));
-        release_date_string = cursor.getString(cursor.getColumnIndex("release_date"));
-        poster_path = cursor.getString(cursor.getColumnIndex("poster_path"));
-        overview_string = cursor.getString(cursor.getColumnIndex("overview"));
-        vote_average = cursor.getString(cursor.getColumnIndex("vote_average"));
-        id = cursor.getString(cursor.getColumnIndex("id"));
 
+                if(cursor.moveToFirst()) {
+                    title = cursor.getString(cursor.getColumnIndex("title"));
+                    release_date_string = cursor.getString(cursor.getColumnIndex("release_date"));
+                    poster_path = cursor.getString(cursor.getColumnIndex("poster_path"));
+                    overview_string = cursor.getString(cursor.getColumnIndex("overview"));
+                    vote_average = cursor.getString(cursor.getColumnIndex("vote_average"));
+                    id = cursor.getString(cursor.getColumnIndex("id"));
+                }
 
 
 
@@ -83,11 +87,12 @@ public class MovieDetailsFragment extends Fragment{
 
         // set movie year in details view
         TextView release_date = (TextView)rootView.findViewById(R.id.release_date);
-        if(release_date_string.length() > 3){
-        release_date.setText(release_date_string.substring(0,4));}
-        else if (release_date_string == null){
+
+        if (release_date_string == null){
             release_date.setText("Release date not available");
         }
+        else if(release_date_string.length() > 3){
+            release_date.setText(release_date_string.substring(0,4));}
         else{
             release_date.setText(release_date_string);
         };
@@ -163,8 +168,6 @@ public class MovieDetailsFragment extends Fragment{
 
                 //open connection to api
                 final String BASE_URL = "https://api.themoviedb.org/3/movie/";
-                MovieDetailsFragment movieDetailsFragment = new MovieDetailsFragment();
-                //String movie_id = movieDetailsFragment.getMovieID() + "?";
                 String movie_id = params[0] + "?";
                 final String APPEND_EXTRAS = "append_to_response";
                 final String EXTRAS = "releases,trailers,reviews";
@@ -272,32 +275,32 @@ public class MovieDetailsFragment extends Fragment{
     }
 
 
-    public static String getMovieID(){return id;}
+    public String getMovieID(){return id;}
 
-    public static String getOverview() {
+    public String getOverview() {
         return overview_string;
     }
 
 
 
-    public static String getTitle() {
+    public String getTitle() {
         return title;
     }
 
 
-    public static String getVote_average() {
+    public String getVote_average() {
         return vote_average;
     }
 
 
 
-    public static String getRelease_date() {
+    public String getRelease_date() {
         return release_date_string;
     }
 
 
 
-    public static String getPoster_path() {
+    public String getPoster_path() {
         if(poster_path != null){
             return ( poster_path);
         }

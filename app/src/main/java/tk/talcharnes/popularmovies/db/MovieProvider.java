@@ -54,7 +54,7 @@ public class MovieProvider extends ContentProvider {
                 break;
             }
             case POPULAR_MOVIES_WITH_ID: {
-                retCursor = null;
+                retCursor = db.query(MovieContract.PopularEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             }
             case FAVORITE_MOVIES: {
@@ -75,7 +75,9 @@ public class MovieProvider extends ContentProvider {
             }
             default: throw new UnsupportedOperationException("Unknown Uri " + uri);
         }
-        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+            retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+
         return retCursor;
     }
 

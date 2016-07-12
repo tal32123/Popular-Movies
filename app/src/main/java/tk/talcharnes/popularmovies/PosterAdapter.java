@@ -2,7 +2,6 @@ package tk.talcharnes.popularmovies;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,10 +28,14 @@ public class PosterAdapter extends android.widget.CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
 
         String poster_path = cursor.getString(cursor.getColumnIndex("poster_path"));
-        Log.i("poster path ", poster_path);
         Picasso.with(context).load(poster_path)
                 .placeholder(R.drawable.temp_poster)
                 .resize(185, 277)
                 .into((ImageView) view);
+
+
     }
+
+
+
 }
