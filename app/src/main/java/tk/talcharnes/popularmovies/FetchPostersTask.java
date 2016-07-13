@@ -42,7 +42,6 @@ public class FetchPostersTask extends AsyncTask<Void, Void, Void> {
         JSONObject jsonParentObject = new JSONObject(posterJsonString);
         JSONArray movieJSonArray = jsonParentObject.getJSONArray("results");
 
-
         Vector<ContentValues> cVVector = new Vector<ContentValues>(movieJSonArray.length());
         for (int i = 0; i < movieJSonArray.length(); i++) {
             JSONObject movieJsonObject = movieJSonArray.getJSONObject(i);
@@ -61,6 +60,7 @@ public class FetchPostersTask extends AsyncTask<Void, Void, Void> {
                     movieValues.put(MovieContract.PopularEntry.COLUMN_POSTER_PATH, poster_path);
                     movieValues.put(MovieContract.PopularEntry.COLUMN_RELEASE_DATE, release_date);
                     movieValues.put(MovieContract.PopularEntry.COLUMN_VOTE_AVERAGE, vote_average);
+                    movieValues.put(MovieContract.PopularEntry.COLUMN_POSITION, (""+i));
                     cVVector.add(movieValues);
                     break;
                 }
@@ -71,6 +71,7 @@ public class FetchPostersTask extends AsyncTask<Void, Void, Void> {
                     movieValues.put(MovieContract.RatingEntry.COLUMN_POSTER_PATH, poster_path);
                     movieValues.put(MovieContract.RatingEntry.COLUMN_RELEASE_DATE, release_date);
                     movieValues.put(MovieContract.RatingEntry.COLUMN_VOTE_AVERAGE, vote_average);
+                    movieValues.put(MovieContract.RatingEntry.COLUMN_POSITION, (""+i));
                     cVVector.add(movieValues);
                     break;
                 }
@@ -177,16 +178,17 @@ public class FetchPostersTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        String sortOrder = "vote_average " + "ASC";
          Cursor posterCursor = postersFragment.getContext().getContentResolver().query(
                 postersFragment.sortUri,
-                new String[]{"poster_path"},
+                //new String[]{"_id", "poster_path"},
+                 null,
                 null,
                 null,
-                sortOrder
+                null
         );
         postersFragment.posterCursor = posterCursor;
         postersFragment.adapter.changeCursor(posterCursor);
         postersFragment.adapter.notifyDataSetChanged();
+
     }
 }

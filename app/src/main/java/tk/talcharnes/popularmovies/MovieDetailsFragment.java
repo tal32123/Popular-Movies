@@ -2,6 +2,7 @@ package tk.talcharnes.popularmovies;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -43,6 +44,10 @@ public class MovieDetailsFragment extends Fragment{
     private String poster_path;
     private String overview_string;
     private String vote_average;
+
+
+
+    private Cursor cursor;
     public MovieDetailsFragment() {
     }
 
@@ -53,26 +58,32 @@ public class MovieDetailsFragment extends Fragment{
 
         //get movie object in order to extract details
         Intent intent = getActivity().getIntent();
-        String movie_number = intent.getStringExtra("Movie_id");
-        Log.i("Movienumber ", movie_number);
-        Uri movie_uri = Uri.parse(intent.getStringExtra("uri"));
-        Log.i("URI ", movie_uri.toString());
-        Cursor cursor = getContext().getContentResolver().query(
+        String position = intent.getStringExtra("position");
+        String uri = intent.getStringExtra("uri");
+        Uri movie_uri = Uri.parse(uri);
+        cursor = getActivity().getContentResolver().query(
                 movie_uri,
                 null,
-                "id = ? ",
-                new String[]{movie_number},
+               "position = ? ",
+                new String[]{position},
                 null);
 
-                if(cursor.moveToFirst()) {
-                    title = cursor.getString(cursor.getColumnIndex("title"));
-                    release_date_string = cursor.getString(cursor.getColumnIndex("release_date"));
-                    poster_path = cursor.getString(cursor.getColumnIndex("poster_path"));
-                    overview_string = cursor.getString(cursor.getColumnIndex("overview"));
-                    vote_average = cursor.getString(cursor.getColumnIndex("vote_average"));
-                    id = cursor.getString(cursor.getColumnIndex("id"));
-                }
+        String cursorLog = DatabaseUtils.dumpCursorToString(cursor);
+        Log.i("Cursor contents = ", cursorLog);
+        Log.i("cursor length ", ""+cursor.getCount());
+        Log.i("Movie uri ", "" + movie_uri);
+        Log.i("Movie number ", position);
 
+        if(cursor.moveToFirst()) {
+
+                title = cursor.getString(cursor.getColumnIndex("title"));
+                release_date_string = cursor.getString(cursor.getColumnIndex("release_date"));
+                poster_path = cursor.getString(cursor.getColumnIndex("poster_path"));
+                overview_string = cursor.getString(cursor.getColumnIndex("overview"));
+                vote_average = cursor.getString(cursor.getColumnIndex("vote_average"));
+                id = cursor.getString(cursor.getColumnIndex("id"));
+            cursor.close();
+        }
 
 
 

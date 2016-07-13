@@ -33,6 +33,7 @@ public class MovieContract {
         public static final String COLUMN_VOTE_AVERAGE = "vote_average";
         public static final String COLUMN_RELEASE_DATE = "release_date";
         public static final String COLUMN_ID = "id";
+        public static final String COLUMN_POSITION = "position";
 
 
         public static Uri buildFavoritesUri (long id){
@@ -55,6 +56,7 @@ public class MovieContract {
         public static final String COLUMN_VOTE_AVERAGE = "vote_average";
         public static final String COLUMN_RELEASE_DATE = "release_date";
         public static final String COLUMN_ID = "id";
+        public static final String COLUMN_POSITION = "position";
 
 
         public static Uri buildPopularUri (long id){
@@ -78,6 +80,7 @@ public class MovieContract {
         public static final String COLUMN_VOTE_AVERAGE = "vote_average";
         public static final String COLUMN_RELEASE_DATE = "release_date";
         public static final String COLUMN_ID = "id";
+        public static final String COLUMN_POSITION = "position";
 
 
         public static Uri buildRatingUri (long id){

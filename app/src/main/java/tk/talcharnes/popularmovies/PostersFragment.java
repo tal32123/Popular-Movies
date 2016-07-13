@@ -55,12 +55,9 @@ public class PostersFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                posterCursor.moveToLast();
-                Long lastID = posterCursor.getLong(posterCursor.getColumnIndex("_id"));
-                String realPosition = ""+(lastID-20+position);
 
                 Intent intent = new Intent(getActivity(), MovieDetails.class);
-                intent.putExtra("Movie_id", realPosition);
+                intent.putExtra("position", (""+position));
                 intent.putExtra("uri", sortUri.toString());
                 startActivity(intent);
             }
@@ -125,7 +122,7 @@ public class PostersFragment extends Fragment {
                 else if (position == 2){
                     spinnerPosition = 2;
                     sortUri = MovieContract.FavoritesEntry.CONTENT_URI;
-                    Toast.makeText(getContext(), "Favorites is not yet available", Toast.LENGTH_SHORT).show();
+                    updatePosters();
                 }
             }
 

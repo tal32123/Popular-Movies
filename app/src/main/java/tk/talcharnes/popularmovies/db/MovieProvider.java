@@ -50,7 +50,7 @@ public class MovieProvider extends ContentProvider {
         SQLiteDatabase db = mOpenHelper.getReadableDatabase();
         switch (sUriMatcher.match(uri)){
             case POPULAR_MOVIES: {
-                retCursor = db.query(MovieContract.PopularEntry.TABLE_NAME, null, null, null, null, null, null);
+                retCursor = db.query(MovieContract.PopularEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             }
             case POPULAR_MOVIES_WITH_ID: {
