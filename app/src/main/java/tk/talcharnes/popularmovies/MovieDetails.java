@@ -53,26 +53,48 @@ public class MovieDetails extends ActionBarActivity {
         String poster_path;
         String overview_string;
         String vote_average;
+        Cursor movieIDCursor;
 
         Intent intent = getIntent();
         String position = intent.getStringExtra("position");
-        Uri uri = Uri.parse(intent.getStringExtra("uri"));
-        Cursor movieIDCursor = getContentResolver().query(
+        String uriString = intent.getStringExtra("uri");
+        Uri uri = Uri.parse(uriString);
+
+        //switch because favorite position is checked differently
+        switch (uriString) {
+            case "content://tk.talcharnes.popularmovies.db/favorites":
+                movieIDCursor = getContentResolver().query(
+                        uri,
+                        null,
+                        null,
+                        null,
+                        null);
+                break;
+
+
+
+               default: movieIDCursor = getContentResolver().query(
                 uri,
                 null,
                 "position = ? ",
                 new String[]{position},
                 null
         );
+                   break;
+                   }
 
         movieIDCursor.moveToFirst();
-            title = movieIDCursor.getString(movieIDCursor.getColumnIndex("title"));
-            release_date_string = movieIDCursor.getString(movieIDCursor.getColumnIndex("release_date"));
-            poster_path = movieIDCursor.getString(movieIDCursor.getColumnIndex("poster_path"));
-            overview_string = movieIDCursor.getString(movieIDCursor.getColumnIndex("overview"));
-            vote_average = movieIDCursor.getString(movieIDCursor.getColumnIndex("vote_average"));
-            id = movieIDCursor.getString(movieIDCursor.getColumnIndex("id"));
+        if(uriString.equals("content://tk.talcharnes.popularmovies.db/favorites")){
+            movieIDCursor.moveToPosition(Integer.parseInt(position));
+        }
+        title = movieIDCursor.getString(movieIDCursor.getColumnIndex("title"));
+        release_date_string = movieIDCursor.getString(movieIDCursor.getColumnIndex("release_date"));
+        poster_path = movieIDCursor.getString(movieIDCursor.getColumnIndex("poster_path"));
+        overview_string = movieIDCursor.getString(movieIDCursor.getColumnIndex("overview"));
+        vote_average = movieIDCursor.getString(movieIDCursor.getColumnIndex("vote_average"));
+        id = movieIDCursor.getString(movieIDCursor.getColumnIndex("id"));
         movieIDCursor.close();
+
 
 
         if (favorited.isChecked()){
@@ -124,7 +146,6 @@ public class MovieDetails extends ActionBarActivity {
             favorited.setText("Add to favorites");
             Toast.makeText(getApplicationContext(), "Movie removed from favorites", Toast.LENGTH_SHORT).show();
 
-            //// TODO: 7/7/2016 delete movie from favorites db
                 int rowsDeleted = getContentResolver().delete(
                         MovieContract.FavoritesEntry.CONTENT_URI,
                         MovieContract.FavoritesEntry.COLUMN_ID + " = ?",

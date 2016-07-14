@@ -2,7 +2,6 @@ package tk.talcharnes.popularmovies;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -55,37 +54,55 @@ public class MovieDetailsFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
-
+//// TODO: 7/13/2016 Implement position for favorites method so that it can be called on click. 
         //get movie object in order to extract details
         Intent intent = getActivity().getIntent();
         String position = intent.getStringExtra("position");
         String uri = intent.getStringExtra("uri");
         Uri movie_uri = Uri.parse(uri);
-        cursor = getActivity().getContentResolver().query(
-                movie_uri,
-                null,
-               "position = ? ",
-                new String[]{position},
-                null);
 
-        String cursorLog = DatabaseUtils.dumpCursorToString(cursor);
-        Log.i("Cursor contents = ", cursorLog);
-        Log.i("cursor length ", ""+cursor.getCount());
-        Log.i("Movie uri ", "" + movie_uri);
-        Log.i("Movie number ", position);
+        //switch because favorite position is checked differently
+        switch (uri) {
+            case "content://tk.talcharnes.popularmovies.db/favorites":
+                cursor = getActivity().getContentResolver().query(
+                        movie_uri,
+                        null,
+                        null,
+                        null,
+                        null);
+                if(cursor.moveToFirst()) {
+                    cursor.moveToPosition(Integer.parseInt(position));
 
-        if(cursor.moveToFirst()) {
+                    title = cursor.getString(cursor.getColumnIndex("title"));
+                    release_date_string = cursor.getString(cursor.getColumnIndex("release_date"));
+                    poster_path = cursor.getString(cursor.getColumnIndex("poster_path"));
+                    overview_string = cursor.getString(cursor.getColumnIndex("overview"));
+                    vote_average = cursor.getString(cursor.getColumnIndex("vote_average"));
+                    id = cursor.getString(cursor.getColumnIndex("id"));
+                    cursor.close();
+                }
+                break;
 
-                title = cursor.getString(cursor.getColumnIndex("title"));
-                release_date_string = cursor.getString(cursor.getColumnIndex("release_date"));
-                poster_path = cursor.getString(cursor.getColumnIndex("poster_path"));
-                overview_string = cursor.getString(cursor.getColumnIndex("overview"));
-                vote_average = cursor.getString(cursor.getColumnIndex("vote_average"));
-                id = cursor.getString(cursor.getColumnIndex("id"));
-            cursor.close();
+            default: cursor = getActivity().getContentResolver().query(
+                    movie_uri,
+                    null,
+                    "position = ? ",
+                    new String[]{position},
+                    null);
+
+                if(cursor.moveToFirst()) {
+
+                    title = cursor.getString(cursor.getColumnIndex("title"));
+                    release_date_string = cursor.getString(cursor.getColumnIndex("release_date"));
+                    poster_path = cursor.getString(cursor.getColumnIndex("poster_path"));
+                    overview_string = cursor.getString(cursor.getColumnIndex("overview"));
+                    vote_average = cursor.getString(cursor.getColumnIndex("vote_average"));
+                    id = cursor.getString(cursor.getColumnIndex("id"));
+                    cursor.close();
+                }
+                break;
+
         }
-
-
 
 
         //set title in details view

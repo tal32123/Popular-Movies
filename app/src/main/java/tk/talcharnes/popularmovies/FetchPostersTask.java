@@ -180,8 +180,7 @@ public class FetchPostersTask extends AsyncTask<Void, Void, Void> {
         super.onPostExecute(aVoid);
          Cursor posterCursor = postersFragment.getContext().getContentResolver().query(
                 postersFragment.sortUri,
-                //new String[]{"_id", "poster_path"},
-                 null,
+                null,
                 null,
                 null,
                 null

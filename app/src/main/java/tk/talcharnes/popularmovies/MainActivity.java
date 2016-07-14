@@ -32,6 +32,14 @@ public class MainActivity extends AppCompatActivity {
 //            setContentView(R.layout.no_network);
 //
 //        }
+        else{
+
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment, new PostersFragment())
+                    .commit();
+
+        }
     }
     //refresh button for once a connection is established
     public void refresh(View view){

@@ -122,7 +122,8 @@ public class PostersFragment extends Fragment {
                 else if (position == 2){
                     spinnerPosition = 2;
                     sortUri = MovieContract.FavoritesEntry.CONTENT_URI;
-                    updatePosters();
+                   updatePosters();
+
                 }
             }
 
@@ -152,8 +153,21 @@ public class PostersFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
     public void updatePosters(){
-        FetchPostersTask updatePosters = new FetchPostersTask(this);
-        updatePosters.execute();
+        if(spinnerPosition==2){
+            posterCursor = getContext().getContentResolver().query(
+                    MovieContract.FavoritesEntry.CONTENT_URI,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+            adapter.changeCursor(posterCursor);
+            adapter.notifyDataSetChanged();
+        }
+        else {
+            FetchPostersTask updatePosters = new FetchPostersTask(this);
+            updatePosters.execute();
+        }
     }
 public String getSort_method(){
     return sort_method;
