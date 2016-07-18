@@ -2,6 +2,7 @@ package tk.talcharnes.popularmovies;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -31,6 +33,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+
+import tk.talcharnes.popularmovies.db.MovieContract;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -54,13 +58,13 @@ public class MovieDetailsFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
-//// TODO: 7/13/2016 Implement position for favorites method so that it can be called on click. 
         //get movie object in order to extract details
         Intent intent = getActivity().getIntent();
         String position = intent.getStringExtra("position");
         String uri = intent.getStringExtra("uri");
         Uri movie_uri = Uri.parse(uri);
-
+        Log.i("Position ", position);
+        Log.i("URI ", movie_uri.toString());
         //switch because favorite position is checked differently
         switch (uri) {
             case "content://tk.talcharnes.popularmovies.db/favorites":
@@ -70,6 +74,8 @@ public class MovieDetailsFragment extends Fragment{
                         null,
                         null,
                         null);
+                Log.i(uri.toString(), " uri");
+                DatabaseUtils.dumpCursor(cursor);
                 if(cursor.moveToFirst()) {
                     cursor.moveToPosition(Integer.parseInt(position));
 
@@ -89,6 +95,7 @@ public class MovieDetailsFragment extends Fragment{
                     "position = ? ",
                     new String[]{position},
                     null);
+                DatabaseUtils.dumpCursor(cursor);
 
                 if(cursor.moveToFirst()) {
 
@@ -140,10 +147,21 @@ public class MovieDetailsFragment extends Fragment{
         MovieJSON fetchMovieJSON = new MovieJSON();
         fetchMovieJSON.execute(id);
 
-
-
-
-
+        //checks to see if a movie exists
+        CheckBox favorited = (CheckBox) rootView.findViewById(R.id.favorite);
+        Cursor favoriteCursor = getActivity().getContentResolver().query(
+                MovieContract.FavoritesEntry.CONTENT_URI,
+                new String[]{MovieContract.FavoritesEntry._ID, MovieContract.FavoritesEntry.COLUMN_ID},
+                MovieContract.FavoritesEntry.COLUMN_ID + " = ? ",
+                new String[]{id},
+                null
+        );
+        DatabaseUtils.dumpCursor(favoriteCursor);
+        if(favoriteCursor.moveToFirst()){
+            favorited.setChecked(true);
+        }
+        else {favorited.setChecked(false);}
+        favoriteCursor.close();
         return rootView;
     }
     /**

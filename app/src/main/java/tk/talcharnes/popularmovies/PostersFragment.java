@@ -5,7 +5,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,7 +27,7 @@ import tk.talcharnes.popularmovies.db.MovieContract;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class PostersFragment extends Fragment {
+public class PostersFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     GridView gridView;
     Bundle myBundle;
@@ -40,6 +44,15 @@ public class PostersFragment extends Fragment {
     public LayoutInflater getLayoutInflater(Bundle savedInstanceState) {
         return super.getLayoutInflater(savedInstanceState);
     }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        getLoaderManager().initLoader(spinnerPosition, null, this);
+        super.onActivityCreated(savedInstanceState);}
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,7 +61,7 @@ public class PostersFragment extends Fragment {
 
 
         gridView = (GridView) view.findViewById(R.id.gridview);
-        adapter = new PosterAdapter(getContext(), posterCursor, 0);
+        adapter = new PosterAdapter(getContext(), null, 0);
 
 
        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -108,22 +121,22 @@ public class PostersFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if(position == 0){
-                    sort_method = "popularity.desc";
                     spinnerPosition = 0;
+                    sort_method = "popularity.desc";
                     sortUri = MovieContract.PopularEntry.CONTENT_URI;
-                    updatePosters();
+                    restartPosterLoader();
+
                 }
                 else if (position == 1){
-                    sort_method = "vote_average.desc";
                     spinnerPosition = 1;
+                    sort_method = "vote_average.desc";
                     sortUri = MovieContract.RatingEntry.CONTENT_URI;
-                    updatePosters();
+                    restartPosterLoader();
                 }
                 else if (position == 2){
                     spinnerPosition = 2;
                     sortUri = MovieContract.FavoritesEntry.CONTENT_URI;
-                   updatePosters();
-
+                   restartPosterLoader();
                 }
             }
 
@@ -133,7 +146,6 @@ public class PostersFragment extends Fragment {
             }
 
         });
-
     }
 
     @Override
@@ -147,29 +159,66 @@ public class PostersFragment extends Fragment {
             Toast.makeText(getActivity(), "Refreshing",
                     Toast.LENGTH_SHORT).show();
 
-           updatePosters();
+          updatePosters();
+            restartPosterLoader();
+
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
     public void updatePosters(){
-        if(spinnerPosition==2){
-            posterCursor = getContext().getContentResolver().query(
-                    MovieContract.FavoritesEntry.CONTENT_URI,
-                    null,
-                    null,
-                    null,
-                    null
-            );
-            adapter.changeCursor(posterCursor);
-            adapter.notifyDataSetChanged();
-        }
-        else {
-            FetchPostersTask updatePosters = new FetchPostersTask(this);
+            FetchPostersTask updatePosters = new FetchPostersTask(getContext());
             updatePosters.execute();
         }
-    }
+
 public String getSort_method(){
     return sort_method;
 }
+    @Override
+    public Loader<Cursor> onCreateLoader(int loaderID, Bundle args) {
+        switch (loaderID) {
+            case 0:
+                return new CursorLoader(getActivity(),
+                        MovieContract.PopularEntry.CONTENT_URI,
+                        new String[]{"_id", "poster_path", "position"},
+                        null,
+                        null,
+                        null
+                );
+            case 1:
+                return new CursorLoader(getActivity(),
+                        MovieContract.RatingEntry.CONTENT_URI,
+                        new String[]{"_id", "poster_path", "position"},
+                        null,
+                        null,
+                        null
+                );
+            case 2:
+                return new CursorLoader(getActivity(),
+                        MovieContract.FavoritesEntry.CONTENT_URI,
+                        new String[]{"_id", "poster_path", "position"},
+                        null,
+                        null,
+                        null
+                );
+            default:return null;
+        }
+
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        adapter.swapCursor(data);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        adapter.swapCursor(null);
+    }
+     void restartPosterLoader(){
+         Log.i("RESTART LOADER", "");
+         getLoaderManager().restartLoader(spinnerPosition, null, this);
+    }
+
 }

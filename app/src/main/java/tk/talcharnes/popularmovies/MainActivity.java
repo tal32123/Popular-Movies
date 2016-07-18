@@ -4,10 +4,10 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
         private Bundle state;
@@ -17,40 +17,53 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         state = savedInstanceState;
 
-
-        //Checks to see if there is internet connection or not. If so, it brings you into the proper layout.
-        //Otherwise it brings you to a layout stating that a connection is necessary to continue (and it has a refresh button)
-        if(savedInstanceState==null){ //&& isNetworkAvailable()){
         setContentView(R.layout.activity_main);
 
 
+    Fragment fragment = getSupportFragmentManager().findFragmentByTag("FRAGMENT");
+//    if (savedInstanceState == null) {
+        if (fragment == null) {
+            FetchPostersTask fetchPostersTask = new FetchPostersTask(getApplicationContext());
+            fetchPostersTask.execute();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment, new PostersFragment())
+                    .add(R.id.fragment, new PostersFragment(), "FRAGMENT")
                     .commit();
         }
+//    }
+
+        //Checks to see if there is internet connection or not. If so, it brings you into the proper layout.
+        //Otherwise it brings you to a layout stating that a connection is necessary to continue (and it has a refresh button)
+//        if(savedInstanceState==null){ //&& isNetworkAvailable()){
+//        setContentView(R.layout.activity_main);
+//
+//
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.fragment, new PostersFragment())
+//                    .commit();
+//        }
 //        else {
 //            setContentView(R.layout.no_network);
 //
-//        }
+////        }
         else{
 
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment, new PostersFragment())
+                    .replace(R.id.fragment, fragment)
                     .commit();
 
         }
     }
     //refresh button for once a connection is established
-    public void refresh(View view){
-        if(state==null && isNetworkAvailable()){
-            setContentView(R.layout.activity_main);
-
-
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment, new PostersFragment())
-                    .commit();
-        }    }
+//    public void refresh(View view){
+//        if(state==null && isNetworkAvailable()){
+//            setContentView(R.layout.activity_main);
+//
+//
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.fragment, new PostersFragment())
+//                    .commit();
+//        }    }
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
