@@ -66,7 +66,7 @@ public class MovieProvider extends ContentProvider {
                 break;
             }
             case RATING_MOVIES: {
-                retCursor = db.query(MovieContract.RatingEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
+                retCursor = db.query(MovieContract.RatingEntry.TABLE_NAME, null, null, null, null, null, null);
                 break;
             }
             case RATING_MOVIES_WITH_ID: {
