@@ -27,11 +27,12 @@
         </activity>
         <activity
             android:name=".MovieDetails"
-            android:label="@string/title_activity_movie_details"
+            android:label="@string/title_activity_movie_details">
             android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="tk.talcharnes.popularmovies.MainActivity" />
+            <!--attempt to remove code for up button in app. To put this functionality back just uncomment following code-->
+            <!--<meta-data-->
+                <!--android:name="android.support.PARENT_ACTIVITY"-->
+                <!--android:value="tk.talcharnes.popularmovies.MainActivity" />-->
         </activity>
         <provider
             android:authorities="tk.talcharnes.popularmovies.db"

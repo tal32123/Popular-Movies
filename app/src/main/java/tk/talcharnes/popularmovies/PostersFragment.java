@@ -1,6 +1,5 @@
 package tk.talcharnes.popularmovies;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import tk.talcharnes.popularmovies.db.MovieContract;
 
@@ -32,21 +30,33 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
     GridView gridView;
     Bundle myBundle;
     Uri sortUri;
+    int posterPosition = gridView.INVALID_POSITION;
     Cursor posterCursor;
     PosterAdapter adapter;
     Spinner spinner;
     int spinnerPosition;
+    final String SELECTED_KEY = "poster_Position";
     private String sort_method;
     public PostersFragment() {
     }
-
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections.
+     */
+    public interface Callback {
+        /**
+         * DetailFragmentCallback for when an item has been selected.
+         */
+        public void onItemSelected(String sortUri, String position);
+    }
     @Override
     public LayoutInflater getLayoutInflater(Bundle savedInstanceState) {
         return super.getLayoutInflater(savedInstanceState);
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        getLoaderManager().initLoader(spinnerPosition, null, this);
+      //  getLoaderManager().initLoader(spinnerPosition, null, this);
         super.onActivityCreated(savedInstanceState);}
 
     @Override
@@ -59,7 +69,11 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-
+        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
+                       // The listview probably hasn't even been populated yet.  Actually perform the
+                                // swapout in onLoadFinished.
+                                        posterPosition = savedInstanceState.getInt(SELECTED_KEY);
+                    }
         gridView = (GridView) view.findViewById(R.id.gridview);
         adapter = new PosterAdapter(getContext(), null, 0);
 
@@ -68,11 +82,10 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
+                posterPosition = position;
+                ((Callback) getActivity()).onItemSelected(sortUri.toString(), ""+position);
 
-                Intent intent = new Intent(getActivity(), MovieDetails.class);
-                intent.putExtra("position", (""+position));
-                intent.putExtra("uri", sortUri.toString());
-                startActivity(intent);
+
             }
         });
         gridView.setAdapter(adapter);
@@ -84,6 +97,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("spinner", spinner.getSelectedItemPosition());
+        outState.putInt(SELECTED_KEY, posterPosition);
     }
 
     @Override
@@ -155,21 +169,10 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
         //noinspection SimplifiableIfStatement
 
-        if (id == R.id.action_refresh) {
-            Toast.makeText(getActivity(), "Refreshing",
-                    Toast.LENGTH_SHORT).show();
 
-          updatePosters();
-            restartPosterLoader();
-
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
-    public void updatePosters(){
-            FetchPostersTask updatePosters = new FetchPostersTask(getContext());
-            updatePosters.execute();
-        }
+
 
 public String getSort_method(){
     return sort_method;
@@ -209,7 +212,9 @@ public String getSort_method(){
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         adapter.swapCursor(data);
-        adapter.notifyDataSetChanged();
+        if(posterPosition != gridView.INVALID_POSITION){
+            gridView.smoothScrollToPosition(posterPosition);
+        }
     }
 
     @Override

@@ -54,18 +54,38 @@ public class MovieDetailsFragment extends Fragment{
     public MovieDetailsFragment() {
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        String uri;
+        Uri movie_uri;
+        String position;
         View rootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
         //get movie object in order to extract details
-        Intent intent = getActivity().getIntent();
-        String position = intent.getStringExtra("position");
-        String uri = intent.getStringExtra("uri");
-        Uri movie_uri = Uri.parse(uri);
-        Log.i("Position ", position);
-        Log.i("URI ", movie_uri.toString());
+        Bundle arguments = getArguments();
+        if (arguments != null){
+            uri = arguments.getString("uri");
+            position = arguments.getString("position");
+            if(uri != null) {
+                movie_uri = Uri.parse(uri);
+                Log.i("Position ", position);
+                Log.i("URI ", movie_uri.toString());
+            }
+            else movie_uri = null;
+        }
+        else {
+            uri = null;
+            movie_uri = null;
+            position = "0";
+        }
+
+
+
+
         //switch because favorite position is checked differently
+        if (uri != null){
         switch (uri) {
             case "content://tk.talcharnes.popularmovies.db/favorites":
                 cursor = getActivity().getContentResolver().query(
@@ -76,7 +96,7 @@ public class MovieDetailsFragment extends Fragment{
                         null);
                 Log.i(uri.toString(), " uri");
                 DatabaseUtils.dumpCursor(cursor);
-                if(cursor.moveToFirst()) {
+                if (cursor.moveToFirst()) {
                     cursor.moveToPosition(Integer.parseInt(position));
 
                     title = cursor.getString(cursor.getColumnIndex("title"));
@@ -86,18 +106,26 @@ public class MovieDetailsFragment extends Fragment{
                     vote_average = cursor.getString(cursor.getColumnIndex("vote_average"));
                     id = cursor.getString(cursor.getColumnIndex("id"));
                     cursor.close();
+                } else {
+                    title = "Not Available";
+                    release_date_string = "Not Available";
+                    overview_string = "Not Available";
+                    vote_average = "0";
+                    poster_path = getPoster_path();
+
                 }
                 break;
 
-            default: cursor = getActivity().getContentResolver().query(
-                    movie_uri,
-                    null,
-                    "position = ? ",
-                    new String[]{position},
-                    null);
+            default:
+                cursor = getActivity().getContentResolver().query(
+                        movie_uri,
+                        null,
+                        "position = ? ",
+                        new String[]{position},
+                        null);
                 DatabaseUtils.dumpCursor(cursor);
 
-                if(cursor.moveToFirst()) {
+                if (cursor.moveToFirst()) {
 
                     title = cursor.getString(cursor.getColumnIndex("title"));
                     release_date_string = cursor.getString(cursor.getColumnIndex("release_date"));
@@ -107,7 +135,25 @@ public class MovieDetailsFragment extends Fragment{
                     id = cursor.getString(cursor.getColumnIndex("id"));
                     cursor.close();
                 }
+                else {
+                    title = "Not Available";
+                    release_date_string = "Not Available";
+                    overview_string = "Not Available";
+                    vote_average = "0";
+                    poster_path = getPoster_path();
+
+                }
                 break;
+
+        }}
+
+        else{
+                title = "Not Available";
+                release_date_string = "Not Available";
+                overview_string = "Not Available";
+                vote_average = "0";
+                poster_path = getPoster_path();
+
 
         }
 
@@ -115,22 +161,25 @@ public class MovieDetailsFragment extends Fragment{
         //set title in details view
         TextView titleView = (TextView) rootView.findViewById(R.id.movie_details_text);
         titleView.setText(title);
+        //// TODO: 7/19/2016 change actionbar so that its height changes dynamically to fit the movie title 
+        //sets action bar/toolbar title
+        // getActivity().setTitle(title);
 
         //set poster into details view
-        ImageView poster = (ImageView)rootView.findViewById(R.id.poster);
+        ImageView poster = (ImageView) rootView.findViewById(R.id.poster);
         Picasso.with(getContext()).load(poster_path).placeholder(R.drawable.temp_poster).into(poster);
 
         // set movie year in details view
-        TextView release_date = (TextView)rootView.findViewById(R.id.release_date);
+        TextView release_date = (TextView) rootView.findViewById(R.id.release_date);
 
-        if (release_date_string == null){
+        if (release_date_string == null) {
             release_date.setText("Release date not available");
-        }
-        else if(release_date_string.length() > 3){
-            release_date.setText(release_date_string.substring(0,4));}
-        else{
+        } else if (release_date_string.length() > 3) {
+            release_date.setText(release_date_string.substring(0, 4));
+        } else {
             release_date.setText(release_date_string);
-        };
+        }
+        ;
 
 
         //Set vote average rating bar
@@ -144,6 +193,8 @@ public class MovieDetailsFragment extends Fragment{
         TextView overview = (TextView) rootView.findViewById(R.id.overview);
         overview.setText(overview_string);
 
+
+        if (id != null){
         MovieJSON fetchMovieJSON = new MovieJSON();
         fetchMovieJSON.execute(id);
 
@@ -157,11 +208,14 @@ public class MovieDetailsFragment extends Fragment{
                 null
         );
         DatabaseUtils.dumpCursor(favoriteCursor);
-        if(favoriteCursor.moveToFirst()){
+        if (favoriteCursor.moveToFirst()) {
             favorited.setChecked(true);
+        } else {
+            favorited.setChecked(false);
         }
-        else {favorited.setChecked(false);}
         favoriteCursor.close();
+    }
+
         return rootView;
     }
     /**
