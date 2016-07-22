@@ -3,9 +3,9 @@ package tk.talcharnes.popularmovies.db;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -18,7 +18,7 @@ import tk.talcharnes.popularmovies.R;
  */
 public class FavoriteMovie {
 
-    public void favorited(View v, Intent intent, Context context){
+    public void favorited(View v, Bundle bundle, Context context){
         CheckBox favorited = (CheckBox) v.findViewById(R.id.favorite);
 
         String title;
@@ -29,8 +29,8 @@ public class FavoriteMovie {
         String vote_average;
         Cursor movieIDCursor;
 
-        String position = intent.getStringExtra("position");
-        String uriString = intent.getStringExtra("uri");
+        String position = bundle.getString("position");
+        String uriString = bundle.getString("uri");
         Uri uri = Uri.parse(uriString);
 
         //switch because favorite position is checked differently

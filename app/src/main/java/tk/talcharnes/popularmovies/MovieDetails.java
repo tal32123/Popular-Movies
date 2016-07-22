@@ -10,6 +10,7 @@ import android.view.View;
 import tk.talcharnes.popularmovies.db.FavoriteMovie;
 
 public class MovieDetails extends ActionBarActivity {
+    Bundle arguments;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +23,7 @@ public class MovieDetails extends ActionBarActivity {
             String uri = intent.getStringExtra("uri");
 
 
-            Bundle arguments = new Bundle();
+            arguments = new Bundle();
             arguments.putString("position", position);
             arguments.putString("uri", uri);
 
@@ -52,7 +53,7 @@ public class MovieDetails extends ActionBarActivity {
     }
     public void favorited(View v){
         FavoriteMovie favoriteMovie = new FavoriteMovie();
-        favoriteMovie.favorited(v, getIntent(), getApplicationContext());
+        favoriteMovie.favorited(v, arguments, getApplicationContext());
     }
 
 }
