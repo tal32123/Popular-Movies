@@ -10,7 +10,7 @@ import android.util.Log;
  */
 public class MovieDBHelper extends SQLiteOpenHelper {
     private static String LOG_TAG = MovieDBHelper.class.getSimpleName();
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 10;
     static final String DATABASE_NAME = "movie.db";
 
     public MovieDBHelper(Context context){
@@ -25,7 +25,9 @@ public class MovieDBHelper extends SQLiteOpenHelper {
                 + MovieContract.FavoritesEntry.COLUMN_TITLE + " TEXT NOT NULL, "
                 + MovieContract.FavoritesEntry.COLUMN_OVERVIEW + " TEXT NOT NULL, "
                 + MovieContract.FavoritesEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL, "
-                + MovieContract.FavoritesEntry.COLUMN_VOTE_AVERAGE + " TEXT NOT NULL" + " );";
+                + MovieContract.FavoritesEntry.COLUMN_VOTE_AVERAGE + " TEXT NOT NULL, "
+                + MovieContract.FavoritesEntry.COLUMN_POSITION + " TEXT" + " );";
+
 
         final String SQL_CREATE_POPULAR_TABLE = "CREATE TABLE IF NOT EXISTS " + MovieContract.PopularEntry.TABLE_NAME + " ( "
                 + MovieContract.PopularEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -34,7 +36,8 @@ public class MovieDBHelper extends SQLiteOpenHelper {
                 + MovieContract.PopularEntry.COLUMN_TITLE + " TEXT NOT NULL, "
                 + MovieContract.PopularEntry.COLUMN_OVERVIEW + " TEXT NOT NULL, "
                 + MovieContract.PopularEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL, "
-                + MovieContract.PopularEntry.COLUMN_VOTE_AVERAGE + " TEXT NOT NULL" + " );";
+                + MovieContract.PopularEntry.COLUMN_VOTE_AVERAGE + " TEXT NOT NULL, "
+                + MovieContract.PopularEntry.COLUMN_POSITION + " TEXT NOT NULL" + " );";
 
         final String SQL_CREATE_RATING_TABLE = "CREATE TABLE IF NOT EXISTS " + MovieContract.RatingEntry.TABLE_NAME + " ( "
                 + MovieContract.RatingEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -43,7 +46,9 @@ public class MovieDBHelper extends SQLiteOpenHelper {
                 + MovieContract.RatingEntry.COLUMN_TITLE + " TEXT NOT NULL, "
                 + MovieContract.RatingEntry.COLUMN_OVERVIEW + " TEXT NOT NULL, "
                 + MovieContract.RatingEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL, "
-                + MovieContract.RatingEntry.COLUMN_VOTE_AVERAGE + " TEXT NOT NULL" + " );";
+                + MovieContract.RatingEntry.COLUMN_VOTE_AVERAGE + " TEXT NOT NULL, "
+                + MovieContract.RatingEntry.COLUMN_POSITION + " TEXT NOT NULL" + " );";
+
 
         db.execSQL(SQL_CREATE_FAVORITES_TABLE);
         Log.i(LOG_TAG, "Creating table with query: " + SQL_CREATE_FAVORITES_TABLE);

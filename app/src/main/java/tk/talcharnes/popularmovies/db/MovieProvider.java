@@ -50,11 +50,11 @@ public class MovieProvider extends ContentProvider {
         SQLiteDatabase db = mOpenHelper.getReadableDatabase();
         switch (sUriMatcher.match(uri)){
             case POPULAR_MOVIES: {
-                retCursor = db.query(MovieContract.PopularEntry.TABLE_NAME, null, null, null, null, null, null);
+                retCursor = db.query(MovieContract.PopularEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             }
             case POPULAR_MOVIES_WITH_ID: {
-                retCursor = null;
+                retCursor = db.query(MovieContract.PopularEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             }
             case FAVORITE_MOVIES: {
@@ -66,7 +66,7 @@ public class MovieProvider extends ContentProvider {
                 break;
             }
             case RATING_MOVIES: {
-                retCursor = db.query(MovieContract.RatingEntry.TABLE_NAME, null, null, null, null, null, null);
+                retCursor = db.query(MovieContract.RatingEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             }
             case RATING_MOVIES_WITH_ID: {
@@ -75,7 +75,9 @@ public class MovieProvider extends ContentProvider {
             }
             default: throw new UnsupportedOperationException("Unknown Uri " + uri);
         }
-        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+            retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+
         return retCursor;
     }
 
