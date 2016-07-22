@@ -1,11 +1,12 @@
 package tk.talcharnes.popularmovies;
 
-import android.content.ContentValues;
-import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,38 +19,49 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Spinner;
-import android.widget.Toast;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 
 import tk.talcharnes.popularmovies.db.MovieContract;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class PostersFragment extends Fragment {
-    private static List<MovieModel> movieModelList;
-    private int movieModelListLength;
+public class PostersFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+
     GridView gridView;
     Bundle myBundle;
-    ImageAdapter adapter;
+    Uri sortUri;
+    int posterPosition = gridView.INVALID_POSITION;
+    Cursor posterCursor;
+    PosterAdapter adapter;
     Spinner spinner;
     int spinnerPosition;
+    final String SELECTED_KEY = "poster_Position";
     private String sort_method;
     public PostersFragment() {
+    }
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections.
+     */
+    public interface Callback {
+        /**
+         * DetailFragmentCallback for when an item has been selected.
+         */
+        public void onItemSelected(String sortUri, String position);
+    }
+    @Override
+    public LayoutInflater getLayoutInflater(Bundle savedInstanceState) {
+        return super.getLayoutInflater(savedInstanceState);
+    }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+      //  getLoaderManager().initLoader(spinnerPosition, null, this);
+        super.onActivityCreated(savedInstanceState);}
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -57,34 +69,27 @@ public class PostersFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-
+        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
+                       // The listview probably hasn't even been populated yet.  Actually perform the
+                                // swapout in onLoadFinished.
+                                        posterPosition = savedInstanceState.getInt(SELECTED_KEY);
+                    }
         gridView = (GridView) view.findViewById(R.id.gridview);
-
-        if (getResources().getConfiguration().orientation
-                == 1) {
-            gridView.setNumColumns(3);
+        adapter = new PosterAdapter(getContext(), null, 0);
 
 
-        } else if ( getResources().getConfiguration().orientation
-                == 2) {
-            gridView.setNumColumns(5);
-
-        }
-
-        adapter = new ImageAdapter(getContext());
-        gridView.setAdapter(adapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
+       gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                Toast.makeText(getContext(), "You clicked " + movieModelList.get(position).getTitle(),
-                        Toast.LENGTH_SHORT).show();
-                MovieModel movieModel = movieModelList.get(position);
-                Intent intent = new Intent(getActivity(), MovieDetails.class);
-                intent.putExtra("Movie_number", position);
-                startActivity(intent);
+                posterPosition = position;
+                ((Callback) getActivity()).onItemSelected(sortUri.toString(), ""+position);
+
 
             }
         });
+        gridView.setAdapter(adapter);
+
         return view;
     }
 
@@ -92,6 +97,7 @@ public class PostersFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("spinner", spinner.getSelectedItemPosition());
+        outState.putInt(SELECTED_KEY, posterPosition);
     }
 
     @Override
@@ -108,9 +114,7 @@ public class PostersFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //commented out until a settings menu is implemented
-      //  super.onCreateOptionsMenu(menu, inflater);
-      //  getActivity().getMenuInflater().inflate(R.menu.menu_main, menu);
+
         inflater.inflate(R.menu.menu_refresh, menu);
 
 
@@ -131,18 +135,22 @@ public class PostersFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if(position == 0){
-                    sort_method = "popularity.desc";
                     spinnerPosition = 0;
-                    updatePosters();
+                    sort_method = "popularity.desc";
+                    sortUri = MovieContract.PopularEntry.CONTENT_URI;
+                    restartPosterLoader();
+
                 }
                 else if (position == 1){
-                    sort_method = "vote_average.desc";
                     spinnerPosition = 1;
-                    updatePosters();
+                    sort_method = "vote_average.desc";
+                    sortUri = MovieContract.RatingEntry.CONTENT_URI;
+                    restartPosterLoader();
                 }
                 else if (position == 2){
                     spinnerPosition = 2;
-                    Toast.makeText(getContext(), "Favorites is not yet available", Toast.LENGTH_SHORT).show();
+                    sortUri = MovieContract.FavoritesEntry.CONTENT_URI;
+                   restartPosterLoader();
                 }
             }
 
@@ -152,7 +160,6 @@ public class PostersFragment extends Fragment {
             }
 
         });
-
     }
 
     @Override
@@ -162,212 +169,61 @@ public class PostersFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
 
-        if (id == R.id.action_refresh) {
-            Toast.makeText(getActivity(), "Refreshing",
-                    Toast.LENGTH_SHORT).show();
 
-           updatePosters();
-            gridView.setAdapter(adapter);
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
-    public void updatePosters(){
-        FetchPostersTask updatePosters = new FetchPostersTask();
-        updatePosters.execute();
+
+
+public String getSort_method(){
+    return sort_method;
+}
+    @Override
+    public Loader<Cursor> onCreateLoader(int loaderID, Bundle args) {
+        switch (loaderID) {
+            case 0:
+                return new CursorLoader(getActivity(),
+                        MovieContract.PopularEntry.CONTENT_URI,
+                        new String[]{"_id", "poster_path", "position"},
+                        null,
+                        null,
+                        null
+                );
+            case 1:
+                return new CursorLoader(getActivity(),
+                        MovieContract.RatingEntry.CONTENT_URI,
+                        new String[]{"_id", "poster_path", "position"},
+                        null,
+                        null,
+                        null
+                );
+            case 2:
+                return new CursorLoader(getActivity(),
+                        MovieContract.FavoritesEntry.CONTENT_URI,
+                        new String[]{"_id", "poster_path", "position"},
+                        null,
+                        null,
+                        null
+                );
+            default:return null;
+        }
+
     }
 
-
-
-
-
-
-
-
-
-    //Get movie posters and data
-    public class FetchPostersTask extends AsyncTask<Void,Void,Void> {
-        private final String LOG_TAG = FetchPostersTask.class.getSimpleName();
-        //will contain raw Json data
-        String posterJsonString = null;
-
-
-        public Void parseMovieJson()
-                throws JSONException{
-            JSONObject jsonParentObject = new JSONObject(posterJsonString);
-            JSONArray movieJSonArray = jsonParentObject.getJSONArray("results");
-
-            movieModelList = new ArrayList<>();
-            for(int i = 0; i < movieJSonArray.length(); i++){
-                JSONObject movieJsonObject = movieJSonArray.getJSONObject(i);
-                MovieModel movieModel = new MovieModel();
-               movieModel.setMovieID(movieJsonObject.getString("id"));
-                movieModel.setTitle(movieJsonObject.getString("title"));
-                movieModel.setOverview(movieJsonObject.getString("overview"));
-                movieModel.setPoster_path(movieJsonObject.getString("poster_path"));
-                movieModel.setRelease_date(movieJsonObject.getString("release_date"));
-                movieModel.setVote_average(movieJsonObject.getString("vote_average"));
-                movieModelListLength++;
-
-                movieModelList.add(movieModel);
-            }
-            return null;
-        }
-        public void addMoviesToDb() throws JSONException {
-
-
-            JSONObject jsonParentObject = new JSONObject(posterJsonString);
-            JSONArray movieJSonArray = jsonParentObject.getJSONArray("results");
-
-
-            Vector<ContentValues> cVVector = new Vector<ContentValues>(movieJSonArray.length());
-            for (int i = 0; i < movieJSonArray.length(); i++) {
-                JSONObject movieJsonObject = movieJSonArray.getJSONObject(i);
-                String id = movieJsonObject.getString("id");
-                String title = movieJsonObject.getString("title");
-                String overview = movieJsonObject.getString("overview");
-                String poster_path = movieJsonObject.getString("poster_path");
-                String release_date = movieJsonObject.getString("release_date");
-                String vote_average = movieJsonObject.getString("vote_average");
-                ContentValues movieValues = new ContentValues();
-                switch (spinnerPosition) {
-                    case 0: {
-                        movieValues.put(MovieContract.PopularEntry.COLUMN_ID, id);
-                        movieValues.put(MovieContract.PopularEntry.COLUMN_TITLE, title);
-                        movieValues.put(MovieContract.PopularEntry.COLUMN_OVERVIEW, overview);
-                        movieValues.put(MovieContract.PopularEntry.COLUMN_POSTER_PATH, poster_path);
-                        movieValues.put(MovieContract.PopularEntry.COLUMN_RELEASE_DATE, release_date);
-                        movieValues.put(MovieContract.PopularEntry.COLUMN_VOTE_AVERAGE, vote_average);
-                        cVVector.add(movieValues);
-                        break;
-                    }
-                    case 1: {
-                        movieValues.put(MovieContract.RatingEntry.COLUMN_ID, id);
-                        movieValues.put(MovieContract.RatingEntry.COLUMN_TITLE, title);
-                        movieValues.put(MovieContract.RatingEntry.COLUMN_OVERVIEW, overview);
-                        movieValues.put(MovieContract.RatingEntry.COLUMN_POSTER_PATH, poster_path);
-                        movieValues.put(MovieContract.RatingEntry.COLUMN_RELEASE_DATE, release_date);
-                        movieValues.put(MovieContract.RatingEntry.COLUMN_VOTE_AVERAGE, vote_average);
-                        cVVector.add(movieValues);
-                        break;
-                    }
-                    case 2: {
-                        break;
-                    }
-                }
-            }
-                if (cVVector.size() > 0){
-                    ContentValues[] cvArray = new ContentValues[cVVector.size()];
-                    cVVector.toArray(cvArray);
-                    switch (spinnerPosition){
-                        case 0:
-                            getContext().getContentResolver().bulkInsert(MovieContract.PopularEntry.CONTENT_URI, cvArray);
-                            break;
-                        case 1:
-                            getContext().getContentResolver().bulkInsert(MovieContract.RatingEntry.CONTENT_URI, cvArray);
-                        case 2:
-                            break;
-                    }
-                }
-
-
-
-        }
-
-        @Override
-        protected Void doInBackground(Void ...params) {
-
-            HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
-
-            //will contain raw Json data
-            try{
-
-                //open connection to api
-
-                final String BASE_URL = "https://api.themoviedb.org/3/discover/movie?";
-                final String SORT_PARAM ="sort_by";
-                final String MINIMUM_VOTES_PARAM="vote_count.gte";
-                final String MINIMUM_VOTES= 500+"";
-
-
-                Uri builtUri = Uri.parse(BASE_URL).buildUpon()
-                        .appendQueryParameter(SORT_PARAM, sort_method)
-                        .appendQueryParameter(MINIMUM_VOTES_PARAM, MINIMUM_VOTES)
-                        .appendQueryParameter("api_key", BuildConfig.MOVIE_DB_API_KEY).build();
-
-                URL url = new URL(builtUri.toString());
-                Log.i(LOG_TAG, "url " + url);
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-
-                //read input into string
-                InputStream inputStream = urlConnection.getInputStream();
-                StringBuffer buffer = new StringBuffer();
-                if(inputStream == null){
-                    //nothing else to do in this case
-                    return null;
-                }
-                reader = new BufferedReader(new InputStreamReader(inputStream));
-                String line;
-                while((line = reader.readLine())!= null){
-                    buffer.append(line + "\n");
-                }
-
-                if(buffer.length()==0){
-                    //nothing here, don't parse
-                    return null;
-                }
-
-                posterJsonString = buffer.toString();
-            }
-            catch(MalformedURLException e){
-                e.printStackTrace();
-            }
-            catch(IOException e){
-                Log.e(LOG_TAG, "Error", e);
-                return null;
-            }
-            finally {
-                if(urlConnection != null){
-                    urlConnection.disconnect();
-                }
-                if(reader != null){
-                    try{
-                        reader.close();
-
-                    }
-                    catch (final IOException e){
-                        Log.e(LOG_TAG,"Error closing stream", e);
-                    }
-                }
-            }
-            try{
-                parseMovieJson();
-                addMoviesToDb();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-
-            String[] asc = new String[movieModelList.size()];
-            for(int i = 0; i < asc.length; i++){
-                asc[i]=(getMovieModelList().get(i).getPoster_path());
-
-            }
-
-            adapter.setImageArray(asc);
-            adapter.notifyDataSetChanged();
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        adapter.swapCursor(data);
+        if(posterPosition != gridView.INVALID_POSITION){
+            gridView.smoothScrollToPosition(posterPosition);
         }
     }
-    public static List<MovieModel> getMovieModelList(){
-        return movieModelList;
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        adapter.swapCursor(null);
+    }
+     void restartPosterLoader(){
+         Log.i("RESTART LOADER", "");
+         getLoaderManager().restartLoader(spinnerPosition, null, this);
     }
 
 }

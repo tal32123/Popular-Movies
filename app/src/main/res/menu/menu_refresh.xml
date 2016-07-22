@@ -2,12 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/action_refresh"
-        android:title="Refresh"
-        android:orderInCategory="1"
-        app:showAsAction="never"
-        />
+
     <item android:id="@+id/spinnerr"
         android:title="sort"
 

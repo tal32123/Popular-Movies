@@ -1,48 +1,111 @@
 package tk.talcharnes.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PostersFragment.Callback{
         private Bundle state;
+    private boolean mTwoPane;
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
+
+    @Override
+    public void onItemSelected(String sortUri, String position) {
+        if(mTwoPane){
+            Bundle args = new Bundle();
+            args.putString("position", position);
+            args.putString("uri", sortUri.toString());
+
+            MovieDetailsFragment movieDetailsFragment = new MovieDetailsFragment();
+            movieDetailsFragment.setArguments(args);
+
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.movie_detail_container, movieDetailsFragment, DETAILFRAGMENT_TAG)
+                    .commit();
+        }
+        else{
+            Intent intent = new Intent(this, MovieDetails.class);
+            intent.putExtra("position", (""+position));
+            intent.putExtra("uri", sortUri.toString());
+            startActivity(intent);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         state = savedInstanceState;
 
-
-        //Checks to see if there is internet connection or not. If so, it brings you into the proper layout.
-        //Otherwise it brings you to a layout stating that a connection is necessary to continue (and it has a refresh button)
-        if(savedInstanceState==null){ //&& isNetworkAvailable()){
         setContentView(R.layout.activity_main);
 
 
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment, new PostersFragment())
-                    .commit();
+  //  Fragment fragment = getSupportFragmentManager().findFragmentByTag("FRAGMENT");
+   if (savedInstanceState == null) {
+    //    if (fragment == null) {
+            FetchPostersTask fetchPostersTask = new FetchPostersTask(getApplicationContext());
+            fetchPostersTask.execute();
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.fragment, new PostersFragment(), "FRAGMENT")
+//                    .commit();
         }
+if(findViewById(R.id.movie_detail_container)!=null){
+    mTwoPane = true;
+    if (savedInstanceState == null) {
+        // The detail container view will be present only in the large-screen layouts
+        // (res/layout-sw600dp). If this view is present, then the activity should be
+        // in two-pane mode.
+
+                        getSupportFragmentManager().beginTransaction()
+                                        .replace(R.id.movie_detail_container, new MovieDetailsFragment(), DETAILFRAGMENT_TAG)
+                                        .commit();
+}
+    }
+else{
+    mTwoPane = false;
+        }
+
+//    }
+
+        //Checks to see if there is internet connection or not. If so, it brings you into the proper layout.
+        //Otherwise it brings you to a layout stating that a connection is necessary to continue (and it has a refresh button)
+//        if(savedInstanceState==null){ //&& isNetworkAvailable()){
+//        setContentView(R.layout.activity_main);
+//
+//
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.fragment, new PostersFragment())
+//                    .commit();
+//        }
 //        else {
 //            setContentView(R.layout.no_network);
+//
+////        }
+//        else{
+//
+//
+//            getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.fragment, fragment)
+//                    .commit();
 //
 //        }
     }
     //refresh button for once a connection is established
-    public void refresh(View view){
-        if(state==null && isNetworkAvailable()){
-            setContentView(R.layout.activity_main);
-
-
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment, new PostersFragment())
-                    .commit();
-        }    }
+//    public void refresh(View view){
+//        if(state==null && isNetworkAvailable()){
+//            setContentView(R.layout.activity_main);
+//
+//
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.fragment, new PostersFragment())
+//                    .commit();
+//        }    }
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -67,9 +130,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
     }

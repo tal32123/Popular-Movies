@@ -1,6 +1,8 @@
 package tk.talcharnes.popularmovies;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -31,70 +34,189 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import tk.talcharnes.popularmovies.db.MovieContract;
+
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MovieDetailsFragment extends Fragment{
+
+    private String title;
     private String id;
-    private String trailerList = "";
-    private String movie_number;
-    private static MovieModel movie;
+    private String release_date_string;
+    private String poster_path;
+    private String overview_string;
+    private String vote_average;
+
+
+
+    private Cursor cursor;
     public MovieDetailsFragment() {
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        String uri;
+        Uri movie_uri;
+        String position;
         View rootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
-
         //get movie object in order to extract details
-        Intent intent = getActivity().getIntent();
-        int movie_number = intent.getIntExtra("Movie_number", 0);
-        movie = PostersFragment.getMovieModelList().get(movie_number);
+        Bundle arguments = getArguments();
+        if (arguments != null){
+            uri = arguments.getString("uri");
+            position = arguments.getString("position");
+            if(uri != null) {
+                movie_uri = Uri.parse(uri);
+                Log.i("Position ", position);
+                Log.i("URI ", movie_uri.toString());
+            }
+            else movie_uri = null;
+        }
+        else {
+            uri = null;
+            movie_uri = null;
+            position = "0";
+        }
+
+
+
+
+        //switch because favorite position is checked differently
+        if (uri != null){
+        switch (uri) {
+            case "content://tk.talcharnes.popularmovies.db/favorites":
+                cursor = getActivity().getContentResolver().query(
+                        movie_uri,
+                        null,
+                        null,
+                        null,
+                        null);
+                Log.i(uri.toString(), " uri");
+                DatabaseUtils.dumpCursor(cursor);
+                if (cursor.moveToFirst()) {
+                    cursor.moveToPosition(Integer.parseInt(position));
+
+                    title = cursor.getString(cursor.getColumnIndex("title"));
+                    release_date_string = cursor.getString(cursor.getColumnIndex("release_date"));
+                    poster_path = cursor.getString(cursor.getColumnIndex("poster_path"));
+                    overview_string = cursor.getString(cursor.getColumnIndex("overview"));
+                    vote_average = cursor.getString(cursor.getColumnIndex("vote_average"));
+                    id = cursor.getString(cursor.getColumnIndex("id"));
+                    cursor.close();
+                } else {
+                    title = "Not Available";
+                    release_date_string = "Not Available";
+                    overview_string = "Not Available";
+                    vote_average = "0";
+                    poster_path = getPoster_path();
+
+                }
+                break;
+
+            default:
+                cursor = getActivity().getContentResolver().query(
+                        movie_uri,
+                        null,
+                        "position = ? ",
+                        new String[]{position},
+                        null);
+                DatabaseUtils.dumpCursor(cursor);
+
+                if (cursor.moveToFirst()) {
+
+                    title = cursor.getString(cursor.getColumnIndex("title"));
+                    release_date_string = cursor.getString(cursor.getColumnIndex("release_date"));
+                    poster_path = cursor.getString(cursor.getColumnIndex("poster_path"));
+                    overview_string = cursor.getString(cursor.getColumnIndex("overview"));
+                    vote_average = cursor.getString(cursor.getColumnIndex("vote_average"));
+                    id = cursor.getString(cursor.getColumnIndex("id"));
+                    cursor.close();
+                }
+                else {
+                    title = "Not Available";
+                    release_date_string = "Not Available";
+                    overview_string = "Not Available";
+                    vote_average = "0";
+                    poster_path = getPoster_path();
+
+                }
+                break;
+
+        }}
+
+        else{
+                title = "Not Available";
+                release_date_string = "Not Available";
+                overview_string = "Not Available";
+                vote_average = "0";
+                poster_path = getPoster_path();
+
+
+        }
+
 
         //set title in details view
         TextView titleView = (TextView) rootView.findViewById(R.id.movie_details_text);
-        titleView.setText(movie.getTitle());
+        titleView.setText(title);
+        //// TODO: 7/19/2016 change actionbar so that its height changes dynamically to fit the movie title 
+        //sets action bar/toolbar title
+        // getActivity().setTitle(title);
 
         //set poster into details view
-        ImageView poster = (ImageView)rootView.findViewById(R.id.poster);
-        Picasso.with(getContext()).load(movie.getPoster_path()).placeholder(R.drawable.temp_poster).into(poster);
+        ImageView poster = (ImageView) rootView.findViewById(R.id.poster);
+        Picasso.with(getContext()).load(poster_path).placeholder(R.drawable.temp_poster).into(poster);
 
         // set movie year in details view
-        TextView release_date = (TextView)rootView.findViewById(R.id.release_date);
-        if(movie.getRelease_date().length() > 3){
-        release_date.setText(movie.getRelease_date().substring(0,4));}
-        else if (movie.getRelease_date() == null){
+        TextView release_date = (TextView) rootView.findViewById(R.id.release_date);
+
+        if (release_date_string == null) {
             release_date.setText("Release date not available");
+        } else if (release_date_string.length() > 3) {
+            release_date.setText(release_date_string.substring(0, 4));
+        } else {
+            release_date.setText(release_date_string);
         }
-        else{
-            release_date.setText((movie.getRelease_date()));
-        };
+        ;
 
 
         //Set vote average rating bar
         RatingBar ratingBar = (RatingBar) rootView.findViewById(R.id.rating_bar);
         ratingBar.setIsIndicator(true);
-        float rating = (float) (Float.parseFloat(movie.getVote_average()));
+        float rating = (float) (Float.parseFloat(vote_average));
         ratingBar.setRating(rating);
 
 
         //set overview in details view
         TextView overview = (TextView) rootView.findViewById(R.id.overview);
-        overview.setText(movie.getOverview());
+        overview.setText(overview_string);
 
-        id = movie.getMovieID();
+
+        if (id != null){
         MovieJSON fetchMovieJSON = new MovieJSON();
         fetchMovieJSON.execute(id);
 
-
-
-
+        //checks to see if a movie exists
+        CheckBox favorited = (CheckBox) rootView.findViewById(R.id.favorite);
+        Cursor favoriteCursor = getActivity().getContentResolver().query(
+                MovieContract.FavoritesEntry.CONTENT_URI,
+                new String[]{MovieContract.FavoritesEntry._ID, MovieContract.FavoritesEntry.COLUMN_ID},
+                MovieContract.FavoritesEntry.COLUMN_ID + " = ? ",
+                new String[]{id},
+                null
+        );
+        DatabaseUtils.dumpCursor(favoriteCursor);
+        if (favoriteCursor.moveToFirst()) {
+            favorited.setChecked(true);
+        } else {
+            favorited.setChecked(false);
+        }
+        favoriteCursor.close();
+    }
 
         return rootView;
-    }
-    public static MovieModel getMovie(){
-        return movie;
     }
     /**
      * Created by Tal on 6/16/2016.
@@ -146,8 +268,6 @@ public class MovieDetailsFragment extends Fragment{
 
                 //open connection to api
                 final String BASE_URL = "https://api.themoviedb.org/3/movie/";
-                MovieDetailsFragment movieDetailsFragment = new MovieDetailsFragment();
-                //String movie_id = movieDetailsFragment.getMovieID() + "?";
                 String movie_id = params[0] + "?";
                 final String APPEND_EXTRAS = "append_to_response";
                 final String EXTRAS = "releases,trailers,reviews";
@@ -252,6 +372,40 @@ public class MovieDetailsFragment extends Fragment{
             String url = movieTrailerList.get(position).getTrailerUrl().toString();
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
         }
+    }
+
+
+    public String getMovieID(){return id;}
+
+    public String getOverview() {
+        return overview_string;
+    }
+
+
+
+    public String getTitle() {
+        return title;
+    }
+
+
+    public String getVote_average() {
+        return vote_average;
+    }
+
+
+
+    public String getRelease_date() {
+        return release_date_string;
+    }
+
+
+
+    public String getPoster_path() {
+        if(poster_path != null){
+            return ( poster_path);
+        }
+        else{
+            return "http://1vyf1h2a37bmf88hy3i8ce9e.wpengine.netdna-cdn.com/wp-content/themes/public/img/noimgavailable.jpg";}
     }
 
 }

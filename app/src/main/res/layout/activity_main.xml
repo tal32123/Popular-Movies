@@ -1,17 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="tk.talcharnes.popularmovies.MainActivity">
-
-    <!-- Placeholder where you inject your fragment. Additional layer of complexity isn't needed. -->
-    <FrameLayout
-        android:id="@+id/fragment"
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+         android:id="@+id/fragment_posters"
+        android:name="tk.talcharnes.popularmovies.PostersFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-
-</android.support.design.widget.CoordinatorLayout>
+        android:layout_height="match_parent"
+        tools:context="tk.talcharnes.popularmovies.PostersFragment"
+        tools:layout="@layout/fragment_main" />
