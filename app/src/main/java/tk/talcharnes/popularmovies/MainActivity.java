@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements PostersFragment.C
     public void onItemSelected(String sortUri, String position) {
         if(mTwoPane){
             args = new Bundle();
+
             args.putString("position", position);
             args.putString("uri", sortUri.toString());
 

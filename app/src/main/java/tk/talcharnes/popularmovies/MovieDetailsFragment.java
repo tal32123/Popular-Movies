@@ -107,8 +107,8 @@ public class MovieDetailsFragment extends Fragment{
                     id = cursor.getString(cursor.getColumnIndex("id"));
                     cursor.close();
                 } else {
-                    title = "Not Available";
-                    release_date_string = "Not Available";
+                    title = "Please choose a movie";
+                    release_date_string = "N/A";
                     overview_string = "Not Available";
                     vote_average = "0";
                     poster_path = getPoster_path();
@@ -136,8 +136,8 @@ public class MovieDetailsFragment extends Fragment{
                     cursor.close();
                 }
                 else {
-                    title = "Not Available";
-                    release_date_string = "Not Available";
+                    title = "Please choose a movie";
+                    release_date_string = "N/A";
                     overview_string = "Not Available";
                     vote_average = "0";
                     poster_path = getPoster_path();
@@ -148,11 +148,11 @@ public class MovieDetailsFragment extends Fragment{
         }}
 
         else{
-                title = "Not Available";
-                release_date_string = "Not Available";
-                overview_string = "Not Available";
-                vote_average = "0";
-                poster_path = getPoster_path();
+            title = "Please choose a movie";
+            release_date_string = "N/A";
+            overview_string = "Not Available";
+            vote_average = "0";
+            poster_path = getPoster_path();
 
 
         }
@@ -356,7 +356,7 @@ public class MovieDetailsFragment extends Fragment{
             for(int i = 0; i < listSize; i++){
                 trailerNames[i]= movieTrailerList.get(i).getMovieName();
             }
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1 , trailerNames);
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), R.layout.list_item, trailerNames);
             listView.setAdapter(arrayAdapter);
             listView.setOnItemClickListener(this);
 
