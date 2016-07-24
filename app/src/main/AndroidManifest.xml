@@ -37,6 +37,6 @@
         <provider
             android:authorities="tk.talcharnes.popularmovies.db"
             android:name=".db.MovieProvider"/>
+        <service android:name=".service.PosterService"/>
     </application>
-
 </manifest>

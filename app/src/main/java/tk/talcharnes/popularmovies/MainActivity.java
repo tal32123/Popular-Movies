@@ -6,11 +6,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import tk.talcharnes.popularmovies.db.FavoriteMovie;
+import tk.talcharnes.popularmovies.service.PosterService;
 
 public class MainActivity extends AppCompatActivity implements PostersFragment.Callback{
         private Bundle state;
@@ -54,11 +56,15 @@ public class MainActivity extends AppCompatActivity implements PostersFragment.C
   //  Fragment fragment = getSupportFragmentManager().findFragmentByTag("FRAGMENT");
    if (savedInstanceState == null) {
     //    if (fragment == null) {
-            FetchPostersTask fetchPostersTask = new FetchPostersTask(getApplicationContext());
-            fetchPostersTask.execute();
+//            FetchPostersTask fetchPostersTask = new FetchPostersTask(getApplicationContext());
+//            fetchPostersTask.execute();
 //            getSupportFragmentManager().beginTransaction()
 //                    .add(R.id.fragment, new PostersFragment(), "FRAGMENT")
 //                    .commit();
+
+       Intent intent = new Intent(this, PosterService.class);
+       Log.i(this.getClass().getSimpleName(), "starting poster service");
+       this.startService(intent);
         }
 if(findViewById(R.id.movie_detail_container)!=null){
     mTwoPane = true;
