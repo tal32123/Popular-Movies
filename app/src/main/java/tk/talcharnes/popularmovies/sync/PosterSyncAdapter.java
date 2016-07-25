@@ -42,9 +42,10 @@ import tk.talcharnes.popularmovies.db.MovieContract;
 public class PosterSyncAdapter extends AbstractThreadedSyncAdapter {
     static final String LOG_TAG = PosterSyncAdapter.class.getSimpleName();
     int position;
-    //Sync interval set to once a day
+    //Sync interval and flex time are set to once a day because the database is only updated once a day
     public static final int SYNC_INTERVAL = 60 * 60 * 24;
-    public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
+
+    public static final int SYNC_FLEXTIME = SYNC_INTERVAL;
     //will contain raw Json data
     String posterJsonString = null;
 
