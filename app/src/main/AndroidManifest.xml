@@ -44,6 +44,7 @@
         </activity>
         <provider
             android:authorities="@string/content_authority"
+            android:name=".db.MovieProvider"
             android:syncable="true"
             android:exported="false"
             />
