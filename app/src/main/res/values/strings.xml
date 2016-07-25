@@ -11,5 +11,4 @@
     <!-- SyncAdapter related -->
     <string name="sync_account_type">example.com</string>
     <string name="content_authority">tk.talcharnes.popularmovies.db</string>
-
 </resources>

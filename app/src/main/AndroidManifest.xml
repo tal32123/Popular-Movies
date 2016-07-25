@@ -9,6 +9,14 @@
         Makes sure Internet is working so that app doesn't crash
     </uses-permission>/>
 
+    <!-- Permissions required by the sync adapter -->
+    <uses-permission
+        android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission
+        android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+    <uses-permission
+        android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+
 
     <application
         android:allowBackup="true"
@@ -35,9 +43,34 @@
                 <!--android:value="tk.talcharnes.popularmovies.MainActivity" />-->
         </activity>
         <provider
-            android:authorities="tk.talcharnes.popularmovies.db"
-            android:name=".db.MovieProvider"/>
-        <service android:name=".service.PosterService"/>
-        <receiver android:name=".service.PosterService$AlarmReceiver"/>
+            android:authorities="@string/content_authority"
+            android:syncable="true"
+            android:exported="false"
+            />
+
+
+        <!-- SyncAdapter's dummy authentication service -->
+        <service
+            android:name=".sync.PosterAuthenticatorService"
+            >
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+        <!-- The SyncAdapter service -->
+        <service
+            android:name=".sync.PosterSyncService"
+            android:exported="true"
+            >
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter" />
+        </service>
     </application>
 </manifest>
