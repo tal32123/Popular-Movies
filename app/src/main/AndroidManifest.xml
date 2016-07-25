@@ -38,5 +38,6 @@
             android:authorities="tk.talcharnes.popularmovies.db"
             android:name=".db.MovieProvider"/>
         <service android:name=".service.PosterService"/>
+        <receiver android:name=".service.PosterService$AlarmReceiver"/>
     </application>
 </manifest>

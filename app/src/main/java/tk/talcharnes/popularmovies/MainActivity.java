@@ -1,5 +1,7 @@
 package tk.talcharnes.popularmovies;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -61,6 +63,11 @@ public class MainActivity extends AppCompatActivity implements PostersFragment.C
 //            getSupportFragmentManager().beginTransaction()
 //                    .add(R.id.fragment, new PostersFragment(), "FRAGMENT")
 //                    .commit();
+
+        Intent alarmIntent = new Intent(this, PosterService.AlarmReceiver.class);
+       PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+       AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+       alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pendingIntent);
 
        Intent intent = new Intent(this, PosterService.class);
        Log.i(this.getClass().getSimpleName(), "starting poster service");
