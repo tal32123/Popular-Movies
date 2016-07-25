@@ -60,7 +60,8 @@ public class MainActivity extends AppCompatActivity implements PostersFragment.C
 //                    .add(R.id.fragment, new PostersFragment(), "FRAGMENT")
 //                    .commit();
 
-       PosterSyncAdapter.syncImmediately(this);
+       //PosterSyncAdapter.syncImmediately(this);
+       PosterSyncAdapter.initializeSyncAdapter(this);
         }
 if(findViewById(R.id.movie_detail_container)!=null){
     mTwoPane = true;
