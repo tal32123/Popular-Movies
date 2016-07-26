@@ -27,6 +27,7 @@ public class PosterAdapter extends android.widget.CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
+
         String poster_path = cursor.getString(cursor.getColumnIndex("poster_path"));
         Picasso.with(context).load(poster_path)
                 .placeholder(R.drawable.temp_poster)
@@ -34,7 +35,4 @@ public class PosterAdapter extends android.widget.CursorAdapter {
                 .into((ImageView) view);
 
     }
-
-
-
 }

@@ -73,9 +73,12 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
                        // The listview probably hasn't even been populated yet.  Actually perform the
                                 // swapout in onLoadFinished.
                                         posterPosition = savedInstanceState.getInt(SELECTED_KEY);
+
                     }
-        gridView = (GridView) view.findViewById(R.id.gridview);
+
         adapter = new PosterAdapter(getContext(), null, 0);
+        gridView = (GridView) view.findViewById(R.id.gridview);
+        gridView.setAdapter(adapter);
 
 
        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -88,7 +91,8 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
             }
         });
-        gridView.setAdapter(adapter);
+
+
 
         return view;
     }
@@ -108,6 +112,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
         if(savedInstanceState != null) {
          //  spinner.setSelection(savedInstanceState.getInt("spinner", 0));
             this.myBundle = savedInstanceState;
+
 
         }
     }
@@ -136,14 +141,13 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if(position == 0){
                     spinnerPosition = 0;
-                    sort_method = "popularity.desc";
                     sortUri = MovieContract.PopularEntry.CONTENT_URI;
                     restartPosterLoader();
+
 
                 }
                 else if (position == 1){
                     spinnerPosition = 1;
-                    sort_method = "vote_average.desc";
                     sortUri = MovieContract.RatingEntry.CONTENT_URI;
                     restartPosterLoader();
                 }
@@ -173,6 +177,11 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
         return super.onOptionsItemSelected(item);
     }
 
+    private void restartPosterLoader(){
+        Log.i("RESTART LOADER", "");
+
+        getLoaderManager().initLoader(spinnerPosition, null, this);
+    }
 
 public String getSort_method(){
     return sort_method;
@@ -211,6 +220,8 @@ public String getSort_method(){
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.i(PostersFragment.class.getSimpleName(), sortUri + " " + spinnerPosition);
+
         adapter.swapCursor(data);
         if(posterPosition != gridView.INVALID_POSITION){
             gridView.smoothScrollToPosition(posterPosition);
@@ -220,10 +231,6 @@ public String getSort_method(){
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         adapter.swapCursor(null);
-    }
-     void restartPosterLoader(){
-         Log.i("RESTART LOADER", "");
-         getLoaderManager().restartLoader(spinnerPosition, null, this);
     }
 
 }

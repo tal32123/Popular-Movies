@@ -2,7 +2,6 @@ package tk.talcharnes.popularmovies;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -76,8 +75,9 @@ public class MovieDetailsFragment extends Fragment{
             else movie_uri = null;
         }
         else {
-            uri = null;
-            movie_uri = null;
+
+            uri = MovieContract.PopularEntry.CONTENT_URI.toString();
+            movie_uri = Uri.parse(uri);
             position = "0";
         }
 
@@ -95,7 +95,6 @@ public class MovieDetailsFragment extends Fragment{
                         null,
                         null);
                 Log.i(uri.toString(), " uri");
-                DatabaseUtils.dumpCursor(cursor);
                 if (cursor.moveToFirst()) {
                     cursor.moveToPosition(Integer.parseInt(position));
 
@@ -123,7 +122,6 @@ public class MovieDetailsFragment extends Fragment{
                         "position = ? ",
                         new String[]{position},
                         null);
-                DatabaseUtils.dumpCursor(cursor);
 
                 if (cursor.moveToFirst()) {
 
@@ -207,7 +205,6 @@ public class MovieDetailsFragment extends Fragment{
                 new String[]{id},
                 null
         );
-        DatabaseUtils.dumpCursor(favoriteCursor);
         if (favoriteCursor.moveToFirst()) {
             favorited.setChecked(true);
         } else {

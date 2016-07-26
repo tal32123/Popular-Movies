@@ -11,10 +11,8 @@ import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -42,10 +40,10 @@ import tk.talcharnes.popularmovies.db.MovieContract;
 public class PosterSyncAdapter extends AbstractThreadedSyncAdapter {
     static final String LOG_TAG = PosterSyncAdapter.class.getSimpleName();
     int position;
+    private static final int POSTER_NOTIFICATION_ID = 3004;
     //Sync interval and flex time are set to once a day because the database is only updated once a day
     public static final int SYNC_INTERVAL = 60 * 60 * 24;
-
-    public static final int SYNC_FLEXTIME = SYNC_INTERVAL;
+    private static final long DAY_IN_MILLIS = 1000 * SYNC_INTERVAL;
     //will contain raw Json data
     String posterJsonString = null;
 
@@ -298,7 +296,6 @@ public class PosterSyncAdapter extends AbstractThreadedSyncAdapter {
             }
         }
 
-
     }
 
     /**
@@ -306,6 +303,7 @@ public class PosterSyncAdapter extends AbstractThreadedSyncAdapter {
      * @param context The context used to access the account service
      */
     public static void syncImmediately(Context context) {
+        Log.i(LOG_TAG, "SyncImmediately called");
         Bundle bundle = new Bundle();
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
@@ -356,7 +354,7 @@ public class PosterSyncAdapter extends AbstractThreadedSyncAdapter {
                 /*
          * Since we've created an account
          */
-                        PosterSyncAdapter.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
+                        PosterSyncAdapter.configurePeriodicSync(context, SYNC_INTERVAL);
 
                         /*
          * Without calling setSyncAutomatically, our periodic sync will not be enabled.
@@ -375,22 +373,16 @@ public class PosterSyncAdapter extends AbstractThreadedSyncAdapter {
     /**
      * Helper method to schedule the sync adapter periodic execution
      */
-    public static void configurePeriodicSync(Context context, int syncInterval, int flexTime) {
+    public static void configurePeriodicSync(Context context, int syncInterval) {
         Account account = getSyncAccount(context);
         String authority = context.getString(R.string.content_authority);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            // we can enable inexact timers in our periodic sync
-            SyncRequest request = new SyncRequest.Builder().
-                    syncPeriodic(syncInterval, flexTime).
-                    setSyncAdapter(account, authority).
-                    setExtras(new Bundle()).build();
-            ContentResolver.requestSync(request);
-        } else {
+
             ContentResolver.addPeriodicSync(account,
                     authority, new Bundle(), syncInterval);
         }
+
+
     }
 
 
-}
 

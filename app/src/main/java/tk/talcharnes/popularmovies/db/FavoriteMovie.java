@@ -75,7 +75,6 @@ public class FavoriteMovie {
             Toast.makeText(context, "Movie added to favorites", Toast.LENGTH_SHORT).show();
 
 
-            //// TODO: 7/7/2016 make favorites button stay highlighted if favorite is clicked
             Cursor favoriteCursor = context.getContentResolver().query(
                     MovieContract.FavoritesEntry.CONTENT_URI,
                     new String[]{MovieContract.FavoritesEntry._ID},
@@ -107,7 +106,6 @@ public class FavoriteMovie {
 
                 long movie_id = ContentUris.parseId(insertedUri);
                 Log.i("fav created. _id = ", ""+ movie_id);
-                Log.i("Path = ", context.getApplicationContext().getDatabasePath(MovieContract.FavoritesEntry.TABLE_NAME).toString());
 
             }
 
