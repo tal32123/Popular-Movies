@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import tk.talcharnes.popularmovies.db.MovieContract;
 
@@ -78,6 +79,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
         adapter = new PosterAdapter(getContext(), null, 0);
         gridView = (GridView) view.findViewById(R.id.gridview);
+        gridView.setEmptyView((TextView) getActivity().findViewById(R.id.gridview_empty));
         gridView.setAdapter(adapter);
 
 
