@@ -19,7 +19,7 @@
         android:padding="0dp" />
     <TextView
         android:id="@+id/gridview_empty"
-        android:text="Please connect to internet and restart app"
+        android:text="@string/please_connect_to_internet_and_restart_app"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textColor="@android:color/white"

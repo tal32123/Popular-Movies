@@ -13,4 +13,10 @@
     <string name="content_authority">tk.talcharnes.popularmovies.db</string>
     <string name="pref_last_notification">last_notification
     </string>
+    <string name="please_connect_to_internet_and_restart_app">Please connect to internet and restart app</string>
+    <string name="overview">Overview</string>
+    <string name="add_to_favorites">Add to favorites</string>
+    <string name="refresh">Refresh</string>
+    <string name="review">Review:</string>
+    <string name="author">Author:</string>
 </resources>

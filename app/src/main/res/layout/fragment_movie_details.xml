@@ -57,7 +57,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Overview"
+        android:text="@string/overview"
         android:layout_margin="8dp"
         android:id="@+id/overview"/>
 
@@ -67,7 +67,7 @@
         android:button="@android:drawable/btn_star"
         android:id="@+id/favorite"
         android:layout_margin="8dp"
-        android:text="Add to favorites"
+        android:text="@string/add_to_favorites"
         android:onClick="favorited"/>
     <ListView
         android:layout_width="match_parent"
