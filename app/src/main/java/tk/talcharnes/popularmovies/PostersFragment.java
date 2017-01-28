@@ -38,6 +38,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
     int spinnerPosition;
     final String SELECTED_KEY = "poster_Position";
     private String sort_method;
+    TextView emptyView;
     public PostersFragment() {
     }
     /**
@@ -79,7 +80,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
         adapter = new PosterAdapter(getContext(), null, 0);
         gridView = (GridView) view.findViewById(R.id.gridview);
-        TextView emptyView = (TextView) view.findViewById(R.id.gridview_empty);
+        emptyView = (TextView) view.findViewById(R.id.gridview_empty);
         gridView.setEmptyView(emptyView);
         gridView.setAdapter(adapter);
 
@@ -157,6 +158,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
                 else if (position == 2){
                     spinnerPosition = 2;
                     sortUri = MovieContract.FavoritesEntry.CONTENT_URI;
+                    emptyView.setText(getString(R.string.no_favorites_in_list));
                    restartPosterLoader();
                 }
             }

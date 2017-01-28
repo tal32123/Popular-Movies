@@ -26,4 +26,5 @@
     <string name="title">Title!</string>
     <string name="poster">Poster</string>
     <string name="release_date">Release Date</string>
+    <string name="no_favorites_in_list">No favorites in list</string>
 </resources>
