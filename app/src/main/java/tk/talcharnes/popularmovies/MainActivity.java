@@ -12,7 +12,10 @@ import android.view.View;
 
 import tk.talcharnes.popularmovies.db.FavoriteMovie;
 import tk.talcharnes.popularmovies.sync.PosterSyncAdapter;
-
+/*
+ * Credit to Udacity staff, StackOverflow, blogc.at, dmytroKarataiev, the-dagger,
+ * and Stackoverflow for the invaluable help in creating this app!
+ */
 public class MainActivity extends AppCompatActivity implements PostersFragment.Callback {
     private Bundle state;
     Bundle args;
