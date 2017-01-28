@@ -37,10 +37,11 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
     Spinner spinner;
     int spinnerPosition;
     final String SELECTED_KEY = "poster_Position";
-    private String sort_method;
     TextView emptyView;
+
     public PostersFragment() {
     }
+
     /**
      * A callback interface that all activities containing this fragment must
      * implement. This mechanism allows activities to be notified of item
@@ -52,14 +53,17 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
          */
         public void onItemSelected(String sortUri, String position);
     }
+
     @Override
     public LayoutInflater getLayoutInflater(Bundle savedInstanceState) {
         return super.getLayoutInflater(savedInstanceState);
     }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-      //  getLoaderManager().initLoader(spinnerPosition, null, this);
-        super.onActivityCreated(savedInstanceState);}
+        //  getLoaderManager().initLoader(spinnerPosition, null, this);
+        super.onActivityCreated(savedInstanceState);
+    }
 
     @Override
     public void onStart() {
@@ -72,11 +76,11 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
         if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
-                       // The listview probably hasn't even been populated yet.  Actually perform the
-                                // swapout in onLoadFinished.
-                                        posterPosition = savedInstanceState.getInt(SELECTED_KEY);
+            // The listview probably hasn't even been populated yet.  Actually perform the
+            // swapout in onLoadFinished.
+            posterPosition = savedInstanceState.getInt(SELECTED_KEY);
 
-                    }
+        }
 
         adapter = new PosterAdapter(getContext(), null, 0);
         gridView = (GridView) view.findViewById(R.id.gridview);
@@ -85,17 +89,16 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
         gridView.setAdapter(adapter);
 
 
-       gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 posterPosition = position;
-                ((Callback) getActivity()).onItemSelected(sortUri.toString(), ""+position);
+                ((Callback) getActivity()).onItemSelected(sortUri.toString(), "" + position);
 
 
             }
         });
-
 
 
         return view;
@@ -113,8 +116,8 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        if(savedInstanceState != null) {
-         //  spinner.setSelection(savedInstanceState.getInt("spinner", 0));
+        if (savedInstanceState != null) {
+            //  spinner.setSelection(savedInstanceState.getInt("spinner", 0));
             this.myBundle = savedInstanceState;
 
 
@@ -128,38 +131,35 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
 
         MenuItem item = menu.findItem(R.id.spinnerr);
-         spinner = (Spinner) MenuItemCompat.getActionView(item);
+        spinner = (Spinner) MenuItemCompat.getActionView(item);
 
 
         String[] sortingCriteria = {"Popular", "Highest Rated", "Favorites"};
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinner, sortingCriteria);
         spinner.setAdapter(spinnerAdapter);
-        if(this.myBundle != null){
+        if (this.myBundle != null) {
             spinner.setSelection(myBundle.getInt("spinner", 0));
-        }
-        else {
+        } else {
             spinner.setSelection(0);
-         }
+        }
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                if(position == 0){
+                if (position == 0) {
                     spinnerPosition = 0;
                     sortUri = MovieContract.PopularEntry.CONTENT_URI;
                     restartPosterLoader();
 
 
-                }
-                else if (position == 1){
+                } else if (position == 1) {
                     spinnerPosition = 1;
                     sortUri = MovieContract.RatingEntry.CONTENT_URI;
                     restartPosterLoader();
-                }
-                else if (position == 2){
+                } else if (position == 2) {
                     spinnerPosition = 2;
                     sortUri = MovieContract.FavoritesEntry.CONTENT_URI;
                     emptyView.setText(getString(R.string.no_favorites_in_list));
-                   restartPosterLoader();
+                    restartPosterLoader();
                 }
             }
 
@@ -182,15 +182,11 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
         return super.onOptionsItemSelected(item);
     }
 
-    private void restartPosterLoader(){
+    private void restartPosterLoader() {
         Log.i("RESTART LOADER", "");
-
         getLoaderManager().initLoader(spinnerPosition, null, this);
     }
 
-public String getSort_method(){
-    return sort_method;
-}
     @Override
     public Loader<Cursor> onCreateLoader(int loaderID, Bundle args) {
         switch (loaderID) {
@@ -218,7 +214,8 @@ public String getSort_method(){
                         null,
                         null
                 );
-            default:return null;
+            default:
+                return null;
         }
 
     }
@@ -227,15 +224,34 @@ public String getSort_method(){
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.i(PostersFragment.class.getSimpleName(), sortUri + " " + spinnerPosition);
 
-        adapter.swapCursor(data);
-        if(posterPosition != gridView.INVALID_POSITION){
+        //Destroy old lodaers so they won't be called again when a favorite is added
+        //this created a bug previously where a favorite was added/removed it
+        //would call an old loader and just be funky in general so ChangeCursor
+        //was necessary which doesn't work without the following lines
+
+        if (loader.getId() == 0) {
+            getLoaderManager().destroyLoader(1);
+            getLoaderManager().destroyLoader(2);
+        } else if (loader.getId() == 1) {
+            getLoaderManager().destroyLoader(0);
+            getLoaderManager().destroyLoader(2);
+        } else {
+            getLoaderManager().destroyLoader(0);
+            getLoaderManager().destroyLoader(1);
+        }
+
+        //Changes cursor so that old cursor is not being monitored anymore
+        adapter.changeCursor(data);
+
+
+        if (posterPosition != gridView.INVALID_POSITION) {
             gridView.smoothScrollToPosition(posterPosition);
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.swapCursor(null);
+
     }
 
 }

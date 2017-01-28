@@ -7,16 +7,21 @@ public class MovieReview {
     private String author;
     private String review;
 
-    public void setAuthor(String author){
+    public void setAuthor(String author) {
         this.author = author;
     }
-    public String getAuthor(){return author;}
 
-    public void setReview(String review){
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setReview(String review) {
         this.review = review;
     }
 
-    public String getReview(){return review;}
+    public String getReview() {
+        return review;
+    }
 
 
 }

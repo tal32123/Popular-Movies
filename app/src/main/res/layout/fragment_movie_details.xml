@@ -2,80 +2,90 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:fillViewport="true">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:fillViewport="true"
     android:orientation="vertical">
-    <TextView android:text="@string/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/movie_details_text"
-        android:textColor="@android:color/white"
-        android:background="#90CAF9"
-        android:textSize="32sp"
-        android:paddingLeft="8dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_width="185dp"
-            android:layout_height="277dp"
-            android:text="@string/poster"
-            android:layout_margin="8dp"
-            android:src="@drawable/temp_poster"
-            android:id="@+id/poster"/>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        android:orientation="vertical">
+
         <TextView
+            android:id="@+id/movie_details_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#90CAF9"
+            android:paddingBottom="20dp"
+            android:paddingLeft="8dp"
+            android:paddingTop="20dp"
+            android:text="@string/title"
+            android:textColor="@android:color/white"
+            android:textSize="32sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/poster"
+                android:layout_width="185dp"
+                android:layout_height="277dp"
+                android:layout_margin="8dp"
+                android:src="@drawable/temp_poster"
+                android:text="@string/poster" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/release_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="@string/release_date"
+                    android:textSize="24sp" />
+
+                <RatingBar
+                    android:id="@+id/rating_bar"
+                    style="@android:style/Widget.DeviceDefault.RatingBar.Small"
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content"
+                    android:numStars="10"
+                    android:stepSize=".5" />
+
+                <ListView
+                    android:id="@+id/trailer_list"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/overview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:textSize="24sp"
-            android:text="@string/release_date"
-            android:id="@+id/release_date"/>
-            <RatingBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:numStars="10"
+            android:text="@string/overview" />
 
-                android:stepSize=".5"
-                style="@android:style/Widget.DeviceDefault.RatingBar.Small"
-                android:id="@+id/rating_bar"/>
-            <ListView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id = "@+id/trailer_list"/>
-        </LinearLayout>
+        <CheckBox
+            android:id="@+id/favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:button="@android:drawable/btn_star"
+            android:onClick="favorited"
+            android:text="@string/add_to_favorites" />
+
+        <ListView
+            android:id="@+id/review_listview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:nestedScrollingEnabled="true" />
     </LinearLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/overview"
-        android:layout_margin="8dp"
-        android:id="@+id/overview"/>
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:button="@android:drawable/btn_star"
-        android:id="@+id/favorite"
-        android:layout_margin="8dp"
-        android:text="@string/add_to_favorites"
-        android:onClick="favorited"/>
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:id="@+id/review_listview"
-        android:nestedScrollingEnabled="true">
-    </ListView>
-</LinearLayout>
 
 </ScrollView>

@@ -38,7 +38,7 @@ import tk.talcharnes.popularmovies.db.MovieContract;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MovieDetailsFragment extends Fragment{
+public class MovieDetailsFragment extends Fragment {
 
     private String title;
     private String id;
@@ -48,11 +48,10 @@ public class MovieDetailsFragment extends Fragment{
     private String vote_average;
 
 
-
     private Cursor cursor;
+
     public MovieDetailsFragment() {
     }
-
 
 
     @Override
@@ -64,17 +63,15 @@ public class MovieDetailsFragment extends Fragment{
         View rootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
         //get movie object in order to extract details
         Bundle arguments = getArguments();
-        if (arguments != null){
+        if (arguments != null) {
             uri = arguments.getString("uri");
             position = arguments.getString("position");
-            if(uri != null) {
+            if (uri != null) {
                 movie_uri = Uri.parse(uri);
                 Log.i("Position ", position);
                 Log.i("URI ", movie_uri.toString());
-            }
-            else movie_uri = null;
-        }
-        else {
+            } else movie_uri = null;
+        } else {
 
             uri = MovieContract.PopularEntry.CONTENT_URI.toString();
             movie_uri = Uri.parse(uri);
@@ -82,70 +79,66 @@ public class MovieDetailsFragment extends Fragment{
         }
 
 
-
-
         //switch because favorite position is checked differently
-        if (uri != null){
-        switch (uri) {
-            case "content://tk.talcharnes.popularmovies.db/favorites":
-                cursor = getActivity().getContentResolver().query(
-                        movie_uri,
-                        null,
-                        null,
-                        null,
-                        null);
-                Log.i(uri.toString(), " uri");
-                if (cursor.moveToFirst()) {
-                    cursor.moveToPosition(Integer.parseInt(position));
+        if (uri != null) {
+            switch (uri) {
+                case "content://tk.talcharnes.popularmovies.db/favorites":
+                    cursor = getActivity().getContentResolver().query(
+                            movie_uri,
+                            null,
+                            null,
+                            null,
+                            null);
+                    Log.i(uri.toString(), " uri");
+                    if (cursor.moveToFirst()) {
+                        cursor.moveToPosition(Integer.parseInt(position));
 
-                    title = cursor.getString(cursor.getColumnIndex("title"));
-                    release_date_string = cursor.getString(cursor.getColumnIndex("release_date"));
-                    poster_path = cursor.getString(cursor.getColumnIndex("poster_path"));
-                    overview_string = cursor.getString(cursor.getColumnIndex("overview"));
-                    vote_average = cursor.getString(cursor.getColumnIndex("vote_average"));
-                    id = cursor.getString(cursor.getColumnIndex("id"));
-                    cursor.close();
-                } else {
-                    title = getString(R.string.please_choose_movie_string);
-                    release_date_string = getString(R.string.N_A_String);
-                    overview_string = getString(R.string.overview_unavailable_string);
-                    vote_average = "0";
-                    poster_path = getPoster_path();
+                        title = cursor.getString(cursor.getColumnIndex("title"));
+                        release_date_string = cursor.getString(cursor.getColumnIndex("release_date"));
+                        poster_path = cursor.getString(cursor.getColumnIndex("poster_path"));
+                        overview_string = cursor.getString(cursor.getColumnIndex("overview"));
+                        vote_average = cursor.getString(cursor.getColumnIndex("vote_average"));
+                        id = cursor.getString(cursor.getColumnIndex("id"));
+                        cursor.close();
+                    } else {
+                        title = getString(R.string.please_choose_movie_string);
+                        release_date_string = getString(R.string.N_A_String);
+                        overview_string = getString(R.string.overview_unavailable_string);
+                        vote_average = "0";
+                        poster_path = getPoster_path();
 
-                }
-                break;
+                    }
+                    break;
 
-            default:
-                cursor = getActivity().getContentResolver().query(
-                        movie_uri,
-                        null,
-                        "position = ? ",
-                        new String[]{position},
-                        null);
+                default:
+                    cursor = getActivity().getContentResolver().query(
+                            movie_uri,
+                            null,
+                            "position = ? ",
+                            new String[]{position},
+                            null);
 
-                if (cursor.moveToFirst()) {
+                    if (cursor.moveToFirst()) {
 
-                    title = cursor.getString(cursor.getColumnIndex("title"));
-                    release_date_string = cursor.getString(cursor.getColumnIndex("release_date"));
-                    poster_path = cursor.getString(cursor.getColumnIndex("poster_path"));
-                    overview_string = cursor.getString(cursor.getColumnIndex("overview"));
-                    vote_average = cursor.getString(cursor.getColumnIndex("vote_average"));
-                    id = cursor.getString(cursor.getColumnIndex("id"));
-                    cursor.close();
-                }
-                else {
-                    title = getString(R.string.please_choose_movie_string);
-                    release_date_string = getString(R.string.N_A_String);
-                    overview_string = getString(R.string.overview_unavailable_string);
-                    vote_average = "0";
-                    poster_path = getPoster_path();
+                        title = cursor.getString(cursor.getColumnIndex("title"));
+                        release_date_string = cursor.getString(cursor.getColumnIndex("release_date"));
+                        poster_path = cursor.getString(cursor.getColumnIndex("poster_path"));
+                        overview_string = cursor.getString(cursor.getColumnIndex("overview"));
+                        vote_average = cursor.getString(cursor.getColumnIndex("vote_average"));
+                        id = cursor.getString(cursor.getColumnIndex("id"));
+                        cursor.close();
+                    } else {
+                        title = getString(R.string.please_choose_movie_string);
+                        release_date_string = getString(R.string.N_A_String);
+                        overview_string = getString(R.string.overview_unavailable_string);
+                        vote_average = "0";
+                        poster_path = getPoster_path();
 
-                }
-                break;
+                    }
+                    break;
 
-        }}
-
-        else{
+            }
+        } else {
             title = "Please choose a movie";
             release_date_string = "N/A";
             overview_string = "Not Available";
@@ -159,9 +152,6 @@ public class MovieDetailsFragment extends Fragment{
         //set title in details view
         TextView titleView = (TextView) rootView.findViewById(R.id.movie_details_text);
         titleView.setText(title);
-        //// TODO: 7/19/2016 change actionbar so that its height changes dynamically to fit the movie title 
-        //sets action bar/toolbar title
-        // getActivity().setTitle(title);
 
         //set poster into details view
         ImageView poster = (ImageView) rootView.findViewById(R.id.poster);
@@ -192,34 +182,35 @@ public class MovieDetailsFragment extends Fragment{
         overview.setText(overview_string);
 
 
-        if (id != null){
-        MovieJSON fetchMovieJSON = new MovieJSON();
-        fetchMovieJSON.execute(id);
+        if (id != null) {
+            MovieJSON fetchMovieJSON = new MovieJSON();
+            fetchMovieJSON.execute(id);
 
-        //checks to see if a movie exists
-        CheckBox favorited = (CheckBox) rootView.findViewById(R.id.favorite);
-        Cursor favoriteCursor = getActivity().getContentResolver().query(
-                MovieContract.FavoritesEntry.CONTENT_URI,
-                new String[]{MovieContract.FavoritesEntry._ID, MovieContract.FavoritesEntry.COLUMN_ID},
-                MovieContract.FavoritesEntry.COLUMN_ID + " = ? ",
-                new String[]{id},
-                null
-        );
-        if (favoriteCursor.moveToFirst()) {
-            favorited.setChecked(true);
-        } else {
-            favorited.setChecked(false);
+            //checks to see if a movie exists
+            CheckBox favorited = (CheckBox) rootView.findViewById(R.id.favorite);
+            Cursor favoriteCursor = getActivity().getContentResolver().query(
+                    MovieContract.FavoritesEntry.CONTENT_URI,
+                    new String[]{MovieContract.FavoritesEntry._ID, MovieContract.FavoritesEntry.COLUMN_ID},
+                    MovieContract.FavoritesEntry.COLUMN_ID + " = ? ",
+                    new String[]{id},
+                    null
+            );
+            if (favoriteCursor.moveToFirst()) {
+                favorited.setChecked(true);
+            } else {
+                favorited.setChecked(false);
+            }
+            favoriteCursor.close();
         }
-        favoriteCursor.close();
-    }
 
         return rootView;
     }
+
     /**
      * Created by Tal on 6/16/2016.
      */
 
-    public class MovieJSON extends AsyncTask<String, Void, Void> implements AdapterView.OnItemClickListener{
+    public class MovieJSON extends AsyncTask<String, Void, Void> implements AdapterView.OnItemClickListener {
         private ArrayList<MovieTrailer> movieTrailerList = new ArrayList<>();
         private ArrayList<MovieReview> movieReviewArrayList = new ArrayList<>();
         //will contain raw Json data
@@ -227,13 +218,12 @@ public class MovieDetailsFragment extends Fragment{
         public final String LOG_TAG = MovieJSON.class.getSimpleName();
 
 
-
         public Void parseMovieExtraJson()
                 throws JSONException {
             JSONObject jsonParentObject = new JSONObject(movieExtrasJSONString);
             JSONObject trailerJSonArray = jsonParentObject.getJSONObject("trailers");
             JSONArray youtubeTrailers = trailerJSonArray.getJSONArray("youtube");
-            for(int i = 0; i < youtubeTrailers.length(); i++){
+            for (int i = 0; i < youtubeTrailers.length(); i++) {
                 JSONObject youtubeTrailerArray = youtubeTrailers.getJSONObject(i);
                 MovieTrailer movieTrailer = new MovieTrailer();
                 movieTrailer.setMovieName(youtubeTrailerArray.getString("name"));
@@ -242,7 +232,7 @@ public class MovieDetailsFragment extends Fragment{
             }
             JSONObject reviewsJsonObject = jsonParentObject.getJSONObject("reviews");
             JSONArray resultsJsonArray = reviewsJsonObject.getJSONArray("results");
-            for(int i = 0; i < resultsJsonArray.length(); i++){
+            for (int i = 0; i < resultsJsonArray.length(); i++) {
                 JSONObject reviewObject = resultsJsonArray.getJSONObject(i);
                 MovieReview review = new MovieReview();
                 review.setAuthor(reviewObject.getString("author"));
@@ -316,7 +306,7 @@ public class MovieDetailsFragment extends Fragment{
                     }
                 }
             }
-            try{
+            try {
 
 
                 parseMovieExtraJson();
@@ -325,7 +315,6 @@ public class MovieDetailsFragment extends Fragment{
             }
             return null;
         }
-
 
 
         @Override
@@ -343,15 +332,14 @@ public class MovieDetailsFragment extends Fragment{
             //replace this with previous/commented out code to get ALL videos for each movie
             //note this can mess up the layout
             int listSize;
-            if (movieTrailerList.size() > 4){
+            if (movieTrailerList.size() > 4) {
                 listSize = 4;
-            }
-            else {
+            } else {
                 listSize = movieTrailerList.size();
             }
             String[] trailerNames = new String[listSize];
-            for(int i = 0; i < listSize; i++){
-                trailerNames[i]= movieTrailerList.get(i).getMovieName();
+            for (int i = 0; i < listSize; i++) {
+                trailerNames[i] = movieTrailerList.get(i).getMovieName();
             }
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), R.layout.list_item, trailerNames);
             listView.setAdapter(arrayAdapter);
@@ -364,6 +352,7 @@ public class MovieDetailsFragment extends Fragment{
 
 
         }
+
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             String url = movieTrailerList.get(position).getTrailerUrl().toString();
@@ -372,12 +361,13 @@ public class MovieDetailsFragment extends Fragment{
     }
 
 
-    public String getMovieID(){return id;}
+    public String getMovieID() {
+        return id;
+    }
 
     public String getOverview() {
         return overview_string;
     }
-
 
 
     public String getTitle() {
@@ -390,19 +380,17 @@ public class MovieDetailsFragment extends Fragment{
     }
 
 
-
     public String getRelease_date() {
         return release_date_string;
     }
 
 
-
     public String getPoster_path() {
-        if(poster_path != null){
-            return ( poster_path);
+        if (poster_path != null) {
+            return (poster_path);
+        } else {
+            return "http://1vyf1h2a37bmf88hy3i8ce9e.wpengine.netdna-cdn.com/wp-content/themes/public/img/noimgavailable.jpg";
         }
-        else{
-            return "http://1vyf1h2a37bmf88hy3i8ce9e.wpengine.netdna-cdn.com/wp-content/themes/public/img/noimgavailable.jpg";}
     }
 
 }

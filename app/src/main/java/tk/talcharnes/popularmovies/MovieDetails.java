@@ -11,15 +11,16 @@ import tk.talcharnes.popularmovies.db.FavoriteMovie;
 
 public class MovieDetails extends ActionBarActivity {
     Bundle arguments;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
 
 
             Intent intent = getIntent();
-            String  position = intent.getStringExtra("position");
+            String position = intent.getStringExtra("position");
             String uri = intent.getStringExtra("uri");
 
 
@@ -41,7 +42,6 @@ public class MovieDetails extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-       // getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -51,7 +51,8 @@ public class MovieDetails extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    public void favorited(View view){
+
+    public void favorited(View view) {
         FavoriteMovie favoriteMovie = new FavoriteMovie();
         favoriteMovie.favorited(view, arguments, getApplicationContext());
     }
