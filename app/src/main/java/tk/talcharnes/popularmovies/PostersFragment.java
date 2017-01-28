@@ -79,7 +79,8 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
         adapter = new PosterAdapter(getContext(), null, 0);
         gridView = (GridView) view.findViewById(R.id.gridview);
-        gridView.setEmptyView((TextView) getActivity().findViewById(R.id.gridview_empty));
+        TextView emptyView = (TextView) view.findViewById(R.id.gridview_empty);
+        gridView.setEmptyView(emptyView);
         gridView.setAdapter(adapter);
 
 

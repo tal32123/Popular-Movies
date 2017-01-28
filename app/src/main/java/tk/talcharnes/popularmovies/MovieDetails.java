@@ -51,9 +51,9 @@ public class MovieDetails extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    public void favorited(View v){
+    public void favorited(View view){
         FavoriteMovie favoriteMovie = new FavoriteMovie();
-        favoriteMovie.favorited(v, arguments, getApplicationContext());
+        favoriteMovie.favorited(view, arguments, getApplicationContext());
     }
 
 }

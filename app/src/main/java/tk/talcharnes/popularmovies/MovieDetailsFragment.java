@@ -106,9 +106,9 @@ public class MovieDetailsFragment extends Fragment{
                     id = cursor.getString(cursor.getColumnIndex("id"));
                     cursor.close();
                 } else {
-                    title = "Please choose a movie";
-                    release_date_string = "N/A";
-                    overview_string = "Not Available";
+                    title = getString(R.string.please_choose_movie_string);
+                    release_date_string = getString(R.string.N_A_String);
+                    overview_string = getString(R.string.overview_unavailable_string);
                     vote_average = "0";
                     poster_path = getPoster_path();
 
@@ -134,9 +134,9 @@ public class MovieDetailsFragment extends Fragment{
                     cursor.close();
                 }
                 else {
-                    title = "Please choose a movie";
-                    release_date_string = "N/A";
-                    overview_string = "Not Available";
+                    title = getString(R.string.please_choose_movie_string);
+                    release_date_string = getString(R.string.N_A_String);
+                    overview_string = getString(R.string.overview_unavailable_string);
                     vote_average = "0";
                     poster_path = getPoster_path();
 
@@ -171,7 +171,7 @@ public class MovieDetailsFragment extends Fragment{
         TextView release_date = (TextView) rootView.findViewById(R.id.release_date);
 
         if (release_date_string == null) {
-            release_date.setText("Release date not available");
+            release_date.setText(R.string.release_date_unavailable);
         } else if (release_date_string.length() > 3) {
             release_date.setText(release_date_string.substring(0, 4));
         } else {

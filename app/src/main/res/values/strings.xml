@@ -19,4 +19,11 @@
     <string name="refresh">Refresh</string>
     <string name="review">Review:</string>
     <string name="author">Author:</string>
+    <string name="release_date_unavailable">Release date not available</string>
+    <string name="please_choose_movie_string">Please choose a movie</string>
+    <string name="overview_unavailable_string">Not Available</string>
+    <string name="N_A_String">N/A</string>
+    <string name="title">Title!</string>
+    <string name="poster">Poster</string>
+    <string name="release_date">Release Date</string>
 </resources>
