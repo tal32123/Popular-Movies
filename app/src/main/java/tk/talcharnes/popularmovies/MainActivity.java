@@ -61,10 +61,6 @@ public class MainActivity extends AppCompatActivity implements PostersFragment.C
         if (findViewById(R.id.movie_detail_container) != null) {
             mTwoPane = true;
             if (savedInstanceState == null) {
-                // The detail container view will be present only in the large-screen layouts
-                // (res/layout-sw600dp). If this view is present, then the activity should be
-                // in two-pane mode.
-
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.movie_detail_container, new MovieDetailsFragment(), DETAILFRAGMENT_TAG)
                         .commit();
