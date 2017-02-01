@@ -1,4 +1,4 @@
-# PopularMovies3
+# Popular Movies
 
 This app shows a list of popular movies based off of different sorting paramaters (Most popular, highest rated, and favorites).
 Once a movie is clicked, the app shows more details on the chosen movie.
