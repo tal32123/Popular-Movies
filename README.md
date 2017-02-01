@@ -13,7 +13,7 @@ All of this is pulled off the internet and synchronizes with the server once a d
 
 ## Installation
 * Get an API key for [the movie database](https://www.themoviedb.org/)
-* Insert API key into the App's build.gradle file in the area marked: "\"INSERT MOVIE DB API KEY HERE\"" Ex. "\"1234567\""
+* Insert API key into the App's `build.gradle` file in the area marked:` "\"INSERT MOVIE DB API KEY HERE\""` Ex. `"\"1234567\""`
 
 ### Screenshots
 ![Screenshot 1](/Screenshots/Screen (1).png "Screenshot 1")
