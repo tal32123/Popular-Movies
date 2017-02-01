@@ -11,6 +11,7 @@ All of this is pulled off the internet and synchronizes with the server once a d
 * Create SQLite database
 * Create different layouts for different screen sizes and orientations
 * Parse JSON
+* Deployed on [Google Play Store](https://play.google.com/store/apps/details?id=tk.talcharnes.popularmovies)
 
 ## Installation
 * Get an API key for [the movie database](https://www.themoviedb.org/)
