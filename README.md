@@ -10,6 +10,7 @@ All of this is pulled off the internet and synchronizes with the server once a d
 * Create content provider
 * Create SQLite database
 * Create different layouts for different screen sizes and orientations
+* Parse JSON
 
 ## Installation
 * Get an API key for [the movie database](https://www.themoviedb.org/)
