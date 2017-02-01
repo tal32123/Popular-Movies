@@ -9,4 +9,9 @@ All of this is pulled off the internet and synchronizes with the server once a d
 * Insert API key into the App's build.gradle file in the area marked: "\"INSERT MOVIE DB API KEY HERE\"" Ex. "\"1234567\""
 
 ## Screenshots
-![Screenshot 1](/Screenshots/Screen (1).png "Optional Title")
+![Screenshot 1](/Screenshots/Screen (1).png "Screenshot 1")
+![Screenshot 2](/Screenshots/Screen (2).png "Screenshot 2")
+![Screenshot 3](/Screenshots/Screen (3).png "Screenshot 3")
+![Screenshot 4](/Screenshots/Screen (4).png "Screenshot 4")
+![Screenshot 5](/Screenshots/Screen (5).png "Screenshot 5")
+
